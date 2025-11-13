@@ -9,10 +9,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     .weather-card { border-radius: 20px; overflow: hidden; }
-    .alert-box { background: #fff3cd; border-left: 5px solid #ffc107; padding: 12px; border-radius: 10px; margin-top: 15px; }
-    .alert-danger { background: #f8d7da; border-left: 5px solid #dc3545; }
-    .ai-thinking { color: #6c757d; font-style: italic; }
     .forecast-day { font-size: 0.85rem; }
+    .alert-box { 
+      background: #fff3cd; 
+      border-left: 5px solid #ffc107; 
+      padding: 12px; 
+      border-radius: 10px; 
+      margin-top: 15px;
+    }
+    .alert-danger { 
+      background: #f8d7da; 
+      border-left: 5px solid #dc3545; 
+    }
+    .ai-thinking { color: #6c757d; font-style: italic; }
   </style>
 </head>
 <body>
@@ -24,7 +33,7 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse" id="#navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">হোম</a></li>
           <li class="nav-item"><a class="nav-link" href="about.html">পরিচয়</a></li>
@@ -135,16 +144,13 @@
   <!-- JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // === OpenWeatherMap API Key ===
+    // === API Keys ===
     const WEATHER_API_KEY = '6561455c200e43306bb6913524c5eeb1';
-
-    // === Gemini API Key (তোমার দেওয়া) ===
     const GEMINI_API_KEY = 'AIzaSyAHUK2V6iIa0TwP7ndAK2aoYYot2XUIW6Y';
 
-    // লাইভ আবহাওয়া লোড করো
+    // === লাইভ আবহাওয়া ===
     async function loadWeather() {
       try {
-        // আজকের আবহাওয়া
         const todayRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Nilphamari,BD&appid=${WEATHER_API_KEY}&units=metric&lang=bn`);
         if (!todayRes.ok) throw new Error('Weather API Error');
         const today = await todayRes.json();
@@ -154,7 +160,6 @@
           <small>আর্দ্রতা: ${today.main.humidity}% | বাতাস: ${Math.round(today.wind.speed * 3.6)} কিমি/ঘণ্টা</small>
         `;
 
-        // ৭ দিনের পূর্বাভাস
         const forecastRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Nilphamari,BD&appid=${WEATHER_API_KEY}&units=metric&lang=bn`);
         if (!forecastRes.ok) throw new Error('Forecast API Error');
         const forecast = await forecastRes.json();
@@ -208,7 +213,7 @@
       }
     }
 
-    // Gemini AI পরামর্শ
+    // === Gemini AI পরামর্শ (ফিক্সড) ===
     async function getAgriAdvice() {
       const query = document.getElementById('agri-query').value.trim();
       if (!query) {
@@ -219,31 +224,42 @@
       document.getElementById('ai-advice').innerHTML = '<em class="ai-thinking">Gemini AI চিন্তা করছে...</em>';
 
       try {
+        const prompt = `বাংলাদেশের গ্রামে কৃষি সমস্যা: ${query}। BRRI-ভিত্তিক, সহজ, ব্যবহারিক সমাধান বাংলায় দাও। ৩-৪ লাইনে। কৃষক যেন সহজে বুঝতে পারে।`;
+
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{
-              parts: [{ 
-                text: `বাংলাদেশের গ্রামে কৃষি সমস্যা: "${query}"। 
-                BRRI-ভিত্তিক, সহজ, ব্যবহারিক সমাধান বাংলায় দাও। 
-                ৩-৪ লাইনে। কৃষক যেন সহজে বুঝতে পারে।` 
-              }]
-            }]
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 150
+            }
           })
         });
 
-        if (!response.ok) throw new Error('Gemini API Error');
+        if (!response.ok) {
+          const err = await response.text();
+          throw new Error(`HTTP ${response.status}: ${err}`);
+        }
 
         const data = await response.json();
-        const answer = data.candidates[0].content.parts[0].text;
-
-        document.getElementById('ai-advice').innerHTML = `<strong>Gemini AI পরামর্শ:</strong><br>${answer}`;
+        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0]) {
+          const answer = data.candidates[0].content.parts[0].text;
+          document.getElementById('ai-advice').innerHTML = `<strong>Gemini AI পরামর্শ:</strong><br>${answer}`;
+        } else {
+          throw new Error('উত্তর পাওয়া যায়নি');
+        }
 
       } catch (error) {
         console.error('Gemini Error:', error);
-        document.getElementById('ai-advice').innerHTML = 
-          '<em class="text-danger">Gemini AI-এ সমস্যা হয়েছে। আবার চেষ্টা করুন বা কৃষি অফিসে যোগাযোগ করুন।</em>';
+        document.getElementById('ai-advice').innerHTML = `
+          <em class="text-danger">
+            <strong>সমস্যা:</strong> ${error.message.includes('429') ? 'অনেক রিকোয়েস্ট। ৫ মিনিট পর চেষ্টা করুন।' : error.message || 'অজানা এরর'}<br>
+            <strong>সমাধান:</strong> API কী চেক করুন বা <a href="https://aistudio.google.com" target="_blank">নতুন কী তৈরি করুন</a>।<br>
+            হেল্পলাইন: ১৬৭৬৭ (কৃষি অফিস)
+          </em>
+        `;
       }
     }
 
