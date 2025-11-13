@@ -26,14 +26,21 @@ body {
   text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
 }
 
-.card {
-  transition: 0.3s ease;
-  border-radius: 15px;
+.card-3d {
+  transition: all 0.4s ease;
+  border-radius: 20px;
   overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
-.card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
+.card-3d:hover {
+  transform: translateY(-15px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+.card-3d img {
+  height: 300px;
+  object-fit: contain;
+  background-color: #f8f9fa;
+  padding: 15px;
 }
 
 .navbar-brand {
