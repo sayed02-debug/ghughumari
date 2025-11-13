@@ -10,8 +10,17 @@
   <style>
     .weather-card { border-radius: 20px; overflow: hidden; }
     .forecast-day { font-size: 0.85rem; }
-    .alert-box { background: #fff3cd; border-left: 5px solid #ffc107; padding: 12px; border-radius: 10px; margin-top: 15px; }
-    .alert-danger { background: #f8d7da; border-left: 5px solid #dc3545; }
+    .alert-box { 
+      background: #fff3cd; 
+      border-left: 5px solid #ffc107; 
+      padding: 12px; 
+      border-radius: 10px; 
+      margin-top: 15px;
+    }
+    .alert-danger { 
+      background: #f8d7da; 
+      border-left: 5px solid #dc3545; 
+    }
     .ai-thinking { color: #6c757d; font-style: italic; }
   </style>
 </head>
@@ -118,7 +127,6 @@
 
   <!-- ফুটার -->
   <footer class="bg-dark text-white text-center py-4">
-
     <div class="container">
       <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী, শিমুলবাড়ী</p>
       <p class="mb-0 small">
@@ -205,7 +213,7 @@
       }
     }
 
-    // === Gemini AI (gemini-2.5-flash) ===
+    // === Gemini AI (gemini-2.5-flash) - 503 এরর ফিক্সড ===
     async function getAgriAdvice() {
       const query = document.getElementById('agri-query').value.trim();
       if (!query) {
@@ -216,19 +224,26 @@
       document.getElementById('ai-advice').innerHTML = '<em class="ai-thinking">Gemini AI চিন্তা করছে...</em>';
 
       try {
-        const prompt = `বাংলাদেশের গ্রামে কৃষি সমস্যা: ${query}। BRRI-ভিত্তিক, সহজ, ব্যবহারিক সমাধান বাংলায় দাও। ৩-৪ লাইনে। কৃষক যেন সহজে বুঝতে পারে।`;
+        // শর্ট প্রম্পট (503 এরর কমাবে)
+        const prompt = `কৃষি সমস্যা: ${query}। সহজ বাংলায় সমাধান দাও। ২-৩ লাইন।`;
 
         const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 150 }
+            generationConfig: { 
+              temperature: 0.5, 
+              maxOutputTokens: 100 
+            }
           })
         });
 
         if (!response.ok) {
           const err = await response.text();
+          if (err.includes('503') || err.includes('overloaded')) {
+            throw new Error('মডেল ওভারলোডেড — ৫ মিনিট পর চেষ্টা করুন।');
+          }
           throw new Error(`HTTP ${response.status}: ${err}`);
         }
 
@@ -238,14 +253,14 @@
         }
 
         const answer = data.candidates[0].content.parts[0].text;
-        document.getElementById('ai-advice').innerHTML = `<strong>Gemini AI পরামর্শ:</strong><br>${answer}`;
+        document.getElementById('ai-advice').innerHTML = `<strong>Gemini AI:</strong><br>${answer}`;
 
       } catch (error) {
         console.error('Gemini Error:', error);
         document.getElementById('ai-advice').innerHTML = `
           <em class="text-danger">
             <strong>সমস্যা:</strong> ${error.message || 'অজানা এরর'}<br>
-            <strong>সমাধান:</strong> ইন্টারনেট চেক করুন বা ৫ মিনিট পর চেষ্টা করুন।<br>
+            <strong>সমাধান:</strong> ৫ মিনিট অপেক্ষা করুন।<br>
             হেল্পলাইন: ১৬৭৬৭
           </em>
         `;
