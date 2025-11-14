@@ -5,15 +5,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ঘুঘুমারী - আমার গ্রাম</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    /* Custom Styles */
+    .hero {
+      background: linear-gradient(rgba(25, 135, 84, 0.8), rgba(20, 108, 67, 0.8)), 
+                  url('images/hero-bg.jpg') center/cover;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      margin-top: 56px;
+    }
+    
+    .text-shadow {
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .card-3d {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: none;
+    }
+    
+    .card-3d:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    .whatsapp-float {
+      position: fixed;
+      width: 60px;
+      height: 60px;
+      bottom: 25px;
+      right: 25px;
+      background-color: #25d366;
+      color: white;
+      border-radius: 50px;
+      text-align: center;
+      font-size: 30px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      color: white;
+    }
+    
+    /* Quick Stats Animation */
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: white;
+    }
+    
+    /* Feature Cards */
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #198754, #146c43);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      color: white;
+      font-size: 2rem;
+    }
+    
+    /* Responsive Image */
+    .responsive-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
 
   <!-- নেভবার -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top shadow">
     <div class="container">
-      <a class="navbar-brand" href="#">ঘুঘুমারী</a>
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="fas fa-home me-2"></i>ঘুঘুমারী
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -25,9 +107,9 @@
           <li class="nav-item"><a class="nav-link" href="development.html">উন্নয়ন</a></li>
           <li class="nav-item"><a class="nav-link" href="#beauty">সৌন্দর্য</a></li>
           <li class="nav-item"><a class="nav-link" href="welfare.html">কল্যাণ</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html">যোগাযোগ</a></li>
-          <li class="nav-item"><a class="nav-link" href="emergency.html">জরুরি প্রয়োজন</a></li>
           <li class="nav-item"><a class="nav-link" href="agriculture.html">কৃষি</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">যোগাযোগ</a></li>
+          <li class="nav-item"><a class="nav-link" href="emergency.html">জরুরি</a></li>
         </ul>
       </div>
     </div>
@@ -35,44 +117,70 @@
 
   <!-- হিরো সেকশন -->
   <section class="hero">
-    <div>
-      <h1 class="display-4 fw-bold text-shadow">ঘুঘুমারী</h1>
-      <p class="lead text-shadow">শিমুলবাড়ী, জলঢাকা, নীলফামারী</p>
-      <p class="text-shadow">শান্তি, প্রকৃতি ও উন্নয়নের একটি আদর্শ গ্রাম</p>
-      <a href="#quick-links" class="btn btn-warning btn-lg shadow">ঘুরে দেখুন</a>
+    <div class="container">
+      <h1 class="display-4 fw-bold text-shadow mb-3">স্বাগতম ঘুঘুমারী</h1>
+      <p class="lead text-shadow mb-4">শিমুলবাড়ী, জলঢাকা, নীলফামারী</p>
+      <p class="text-shadow mb-4 fs-5">প্রকৃতির কোলে লালিত একটি শান্তিপূর্ণ গ্রাম</p>
+      <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <a href="#quick-links" class="btn btn-warning btn-lg shadow">
+          <i class="fas fa-compass me-2"></i>ঘুরে দেখুন
+        </a>
+        <a href="about.html" class="btn btn-outline-light btn-lg shadow">
+          <i class="fas fa-info-circle me-2"></i>পরিচয়
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- কুইক লিঙ্কস -->
   <section id="quick-links" class="py-5 bg-light">
     <div class="container">
-      <div class="row text-center g-4">
-        <div class="col-md-4">
+      <h2 class="text-center mb-5 fw-bold text-success">দ্রুত এক্সেস</h2>
+      <div class="row g-4">
+        <div class="col-md-3 col-6">
           <a href="education.html" class="text-decoration-none">
-            <div class="card h-100 shadow-sm card-3d">
+            <div class="card h-100 shadow-sm card-3d text-center">
               <div class="card-body">
-                <i class="fas fa-school fa-3x text-primary mb-3"></i>
-                <h5 class="fw-bold">শিক্ষা</h5>
+                <div class="feature-icon">
+                  <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h6 class="fw-bold text-dark mb-0">শিক্ষা</h6>
               </div>
             </div>
           </a>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3 col-6">
           <a href="development.html" class="text-decoration-none">
-            <div class="card h-100 shadow-sm card-3d">
+            <div class="card h-100 shadow-sm card-3d text-center">
               <div class="card-body">
-                <i class="fas fa-tools fa-3x text-success mb-3"></i>
-                <h5 class="fw-bold">উন্নয়ন</h5>
+                <div class="feature-icon">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <h6 class="fw-bold text-dark mb-0">উন্নয়ন</h6>
               </div>
             </div>
           </a>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3 col-6">
           <a href="welfare.html" class="text-decoration-none">
-            <div class="card h-100 shadow-sm card-3d">
+            <div class="card h-100 shadow-sm card-3d text-center">
               <div class="card-body">
-                <i class="fas fa-hands-helping fa-3x text-info mb-3"></i>
-                <h5 class="fw-bold">কল্যাণ</h5>
+                <div class="feature-icon">
+                  <i class="fas fa-hands-helping"></i>
+                </div>
+                <h6 class="fw-bold text-dark mb-0">কল্যাণ</h6>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-3 col-6">
+          <a href="agriculture.html" class="text-decoration-none">
+            <div class="card h-100 shadow-sm card-3d text-center">
+              <div class="card-body">
+                <div class="feature-icon">
+                  <i class="fas fa-tractor"></i>
+                </div>
+                <h6 class="fw-bold text-dark mb-0">কৃষি</h6>
               </div>
             </div>
           </a>
@@ -84,36 +192,83 @@
   <!-- স্বাগতম -->
   <section class="py-5">
     <div class="container text-center">
-      <h2 class="fw-bold text-success">স্বাগতম ঘুঘুমারীতে</h2>
-      <p class="lead text-muted">একটি শান্তিপূর্ণ গ্রাম, যেখানে প্রকৃতি ও মানুষ একসাথে বসবাস করে</p>
+      <h2 class="fw-bold text-success mb-4">ঘুঘুমারী সম্পর্কে</h2>
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <p class="lead text-muted mb-4">
+            ঘুঘুমারী হল নীলফামারী জেলার জলঢাকা উপজেলার শিমুলবাড়ী ইউনিয়নের একটি মনোরম গ্রাম। 
+            এখানে প্রকৃতির সৌন্দর্য, সরল মানুষ এবং উন্নয়নের ছোঁয়া একাকার হয়ে আছে।
+          </p>
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <span class="badge bg-success fs-6">শান্তিপূর্ণ</span>
+            <span class="badge bg-success fs-6">উন্নয়নশীল</span>
+            <span class="badge bg-success fs-6">প্রাকৃতিক</span>
+          </div>
+        </div>
+        <div class="col-lg-6 mt-4 mt-lg-0">
+          <img src="images/village-view.jpg" alt="গ্রামের দৃশ্য" class="responsive-img shadow" 
+               onerror="this.style.display='none'">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- পরিসংখ্যান -->
+  <section class="py-5 bg-success text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-6 col-md-3 mb-4">
+          <div class="stat-number">৫,০০০+</div>
+          <p class="mb-0">জনসংখ্যা</p>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+          <div class="stat-number">৪টি</div>
+          <p class="mb-0">শিক্ষা প্রতিষ্ঠান</p>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+          <div class="stat-number">১টি</div>
+          <p class="mb-0">পাকা সেতু</p>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+          <div class="stat-number">৩টি</div>
+          <p class="mb-0">পুকুর</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- সাম্প্রতিক খবর -->
   <section class="py-5 bg-white">
     <div class="container">
-      <h2 class="text-center mb-5 fw-bold">সাম্প্রতিক খবর</h2>
+      <h2 class="text-center mb-5 fw-bold text-success">সাম্প্রতিক খবর</h2>
       <div class="row g-4">
         <div class="col-md-4">
-          <div class="card h-100 shadow-sm">
-            <img src="images/welfare.jpg" class="card-img-top" style="height: 200px; object-fit: cover;">
-            <div class="card-body">
-              <h5 class="card-title">শীতবস্ত্র বিতরণ ২০১৯</h5>
-              <p class="text-muted small">৫০+ পরিবারকে শীতবস্ত্র দেওয়া হয়েছে</p>
+          <div class="card h-100 shadow-sm card-3d">
+            <div class="card-body text-center p-4">
+              <i class="fas fa-tshirt fa-3x text-warning mb-3"></i>
+              <h5 class="card-title">শীতবস্ত্র বিতরণ</h5>
+              <p class="text-muted">৫০+ পরিবারকে শীতবস্ত্র দেওয়া হয়েছে</p>
+              <small class="text-success">ডিসেম্বর ২০১৯</small>
             </div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="card h-100 shadow-sm">
-            <div class="card-body text-center d-flex align-items-center justify-content-center" style="height: 200px;">
-              <p class="text-muted">নতুন সেতু উদ্বোধন শীঘ্রই</p>
+          <div class="card h-100 shadow-sm card-3d">
+            <div class="card-body text-center p-4">
+              <i class="fas fa-bridge fa-3x text-info mb-3"></i>
+              <h5 class="card-title">নতুন সেতু</h5>
+              <p class="text-muted">শীঘ্রই নতুন সেতুর উদ্বোধন</p>
+              <small class="text-success">শীঘ্রই</small>
             </div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="card h-100 shadow-sm">
-            <div class="card-body text-center d-flex align-items-center justify-content-center" style="height: 200px;">
-              <p class="text-muted">বৃত্তি পরীক্ষা ২০২৫</p>
+          <div class="card h-100 shadow-sm card-3d">
+            <div class="card-body text-center p-4">
+              <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+              <h5 class="card-title">বৃত্তি পরীক্ষা</h5>
+              <p class="text-muted">বৃত্তি পরীক্ষা ২০২৫ এর প্রস্তুতি</p>
+              <small class="text-success">২০২৫</small>
             </div>
           </div>
         </div>
@@ -127,9 +282,15 @@
       <h2 class="text-center mb-5 fw-bold text-success">ঘুঘুমারীর সৌন্দর্য</h2>
       <div class="row justify-content-center">
         <div class="col-lg-8">
-          <div class="card card-3d border-0 shadow-lg">
-            <img src="images/sondha.jpg" class="card-img-top img-fluid" alt="সৌন্দর্য" style="height: 500px; object-fit: contain; background-color: #f0f4f8; padding: 25px; border-radius: 25px;">
-            <div class="card-body text-center" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-radius: 0 0 25px 25px;">
+          <div class="card card-3d border-0 shadow-lg overflow-hidden">
+            <div style="height: 400px; background: linear-gradient(135deg, #e3f2fd, #bbdefb); display: flex; align-items: center; justify-content: center;">
+              <div class="text-center p-4">
+                <i class="fas fa-image fa-5x text-success mb-3 opacity-50"></i>
+                <h4 class="text-success">গ্রামের প্রাকৃতিক সৌন্দর্য</h4>
+                <p class="text-muted">ছবি যোগ করা হবে শীঘ্রই</p>
+              </div>
+            </div>
+            <div class="card-body text-center" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb);">
               <h5 class="card-title fw-bold text-success">সন্ধ্যার মায়াবী আলো</h5>
               <p class="card-text text-muted">ধানের খেতে সূর্যাস্ত, পুকুরের শান্ত জল — এই সৌন্দর্যই ঘুঘুমারী।</p>
             </div>
@@ -139,43 +300,28 @@
     </div>
   </section>
 
-  <!-- পরিসংখ্যান -->
-  <section class="py-5 bg-success text-white">
-    <div class="container">
-      <div class="row text-center">
-        <div class="col-6 col-md-3 mb-3">
-          <h3 class="fw-bold">৩,০০০+</h3>
-          <p>জনসংখ্যা</p>
-        </div>
-        <div class="col-6 col-md-3 mb-3">
-          <h3 class="fw-bold">৪ টি</h3>
-          <p>শিক্ষা প্রতিষ্ঠান</p>
-        </div>
-        <div class="col-6 col-md-3 mb-3">
-          <h3 class="fw-bold">১টি</h3>
-          <p>পাকা সেতু</p>
-        </div>
-        <div class="col-6 col-md-3 mb-3">
-          <h3 class="fw-bold">৩টি</h3>
-          <p>পুকুর</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- CTA -->
-  <section class="py-5 text-center bg-light">
+  <section class="py-5 text-center bg-white">
     <div class="container">
-      <h3 class="fw-bold">আমাদের সাথে যোগাযোগ করুন</h3>
-      <a href="https://wa.me/8801521703362" class="btn btn-success btn-lg mt-3">WhatsApp</a>
+      <h3 class="fw-bold text-success mb-3">আমাদের সাথে যুক্ত থাকুন</h3>
+      <p class="text-muted mb-4">গ্রামের সর্বশেষ খবর ও উন্নয়ন সম্পর্কে জানতে</p>
+      <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <a href="https://wa.me/8801521703362" class="btn btn-success btn-lg">
+          <i class="fab fa-whatsapp me-2"></i>WhatsApp
+        </a>
+        <a href="contact.html" class="btn btn-outline-success btn-lg">
+          <i class="fas fa-envelope me-2"></i>যোগাযোগ
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- ফুটার -->
   <footer class="bg-dark text-white text-center py-4">
     <div class="container">
-      <p class="mb-1 fw-bold">© 2025 ঘুঘুমারী, শিমুলবাড়ী</p>
-      <p class="mb-0 small">জলঢাকা, নীলফামারী । ডেভেলপ করেছেন: <strong>Abu Sayed Islam</strong><br>Computer Science and Engineering, JnU</p>
+      <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী, শিমুলবাড়ী</p>
+      <p class="mb-0 small">জলঢাকা, নীলফামারী • ডেভেলপ করেছেন: <strong>Abu Sayed Islam</strong></p>
+      <p class="small mt-1">Computer Science and Engineering, JnU</p>
     </div>
   </footer>
 
