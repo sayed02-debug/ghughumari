@@ -247,6 +247,16 @@
         console.error('Gemini Error:', error);
         const msg = String(error.message || error).toLowerCase();
 
+        if (msg.includes('proxy_405') || msg.includes('405 not allowed')) {
+          document.getElementById('ai-advice').innerHTML = `
+            <div class="text-danger">
+              <strong>সমস্যা:</strong> ব্রাউজার থেকে প্রক্সি সার্ভারে POST পাঠানো যাচ্ছে না (HTTP 405)। এটি সাধারণত ঘটে যখন পেজটি স্ট্যাটিক হোস্টে রাখা আছে (উদাহরণ: GitHub Pages) কিন্তু প্রক্সি সার্ভার চালু নেই।
+                <br><strong>সমাধান:</strong> ১) লোকালভাবে প্রক্সি চালান: প্রজেক্ট রুটে চালান 'npm install' এবং 'npm start'। ২) বা প্রক্সি হোস্ট করুন এবং 'PROXY_BASE'-এর মান সেট করুন (উদাহরণ: 'http://your-server.example.com').
+            </div>
+          `;
+          return;
+        }
+
         // If model not found, call ListModels to show available models and guidance
         if (msg.includes('404') || msg.includes('not found') || msg.includes('models/')) {
           try {
@@ -293,7 +303,8 @@
     // === Gemini Chatbot ===
     const chatMessages = []; // {role: 'user'|'assistant', text: ''}
     const PREFERRED_MODEL = 'models/gemini-2.5-pro'; // server will use this by default if provided
-    const PROXY_BASE = ''; // same origin, e.g. '' or 'http://localhost:3000' if running server elsewhere
+    // Default proxy base for local testing. If you deploy the proxy elsewhere, set this to that origin (e.g. 'https://your-proxy.example.com')
+    const PROXY_BASE = 'http://localhost:3000'; // set to '' if proxy is same origin
 
     function renderChat() {
       const win = document.getElementById('chat-window');
@@ -353,8 +364,16 @@
         if (chatMessages.length && chatMessages[chatMessages.length - 1].text === 'Gemini AI চিন্তা করছে...') chatMessages.pop();
         console.error('Chat Error:', err);
 
-        // If model not found (404) or message says model not found, try ListModels and show guidance
+        // Diagnose common errors (proxy 405, model 404)
         const msgText = String(err.message || err).toLowerCase();
+        if (msgText.includes('proxy_405') || msgText.includes('405 not allowed')) {
+          const help = `সমস্যা: আপনার ব্রাউজার থেকে প্রক্সি সার্ভারে POST পাঠানো যাচ্ছে না (HTTP 405)। এটি সাধারণত ঘটে যখন পেজটি স্ট্যাটিক হোস্টে রাখা আছে এবং প্রক্সি সার্ভার চালু নেই।\nসমাধান: লোকালভাবে প্রক্সি চালান: প্রজেক্ট রুটে 'npm install' এবং 'npm start' চালান, অথবা প্রক্সি হোস্ট করে 'PROXY_BASE' সেট করুন (উদাহরণ: 'http://your-server.example.com')`;
+          chatMessages.push({ role: 'assistant', text: help });
+          renderChat();
+          return;
+        }
+
+        // If model not found (404) or message says model not found, try ListModels and show guidance
         if (msgText.includes('404') || msgText.includes('not found') || msgText.includes('models/') ) {
           try {
             const models = await listAvailableModels();
@@ -395,10 +414,17 @@
       const url = `${PROXY_BASE}/api/generate`;
       const body = { model: modelName, prompt: promptText, temperature: opts.temperature || 0.3, maxOutputTokens: opts.maxOutputTokens || 300 };
       const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+
+      // Helpful handling for common deployment mistake: calling proxy from a static host (GitHub Pages etc.)
       if (!res.ok) {
         const t = await res.text();
+        if (res.status === 405) {
+          // 405 usually means the origin (where the HTML is hosted) doesn't accept POSTs to this path
+          throw new Error('PROXY_405: 405 Not Allowed - the POST to the proxy was rejected. This often happens when the site is hosted as static pages (e.g. GitHub Pages) and no server is running at the proxy origin. Run the proxy (`npm start`) or deploy the proxy to a server and set `PROXY_BASE` to its origin.');
+        }
         throw new Error(`Proxy generate failed: HTTP ${res.status}: ${t}`);
       }
+
       const data = await res.json();
 
       // Robust extraction similar to server-side shapes
