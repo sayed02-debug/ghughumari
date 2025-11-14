@@ -3,34 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>কৃষি AI - ঘুঘুমারী</title>
+  <title>কৃষি - ঘুঘুমারী</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     body {
-      background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+      background: #f8f9fa;
       font-family: 'SolaimanLipi', Arial, sans-serif;
-      min-height: 100vh;
     }
     .navbar-brand {
-      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .hero-section {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      padding: 4rem 0;
+      margin-top: 56px;
     }
     .chat-container {
       max-width: 900px;
       margin: 2rem auto;
       background: white;
-      border-radius: 20px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       overflow: hidden;
     }
     .chat-header {
-      background: linear-gradient(135deg, #0d8b3a, #0a6e2c);
+      background: #198754;
       color: white;
       padding: 1.5rem;
       text-align: center;
     }
     .chat-messages {
-      height: 500px;
+      height: 400px;
       overflow-y: auto;
       padding: 1.5rem;
       background: #fafafa;
@@ -38,26 +43,25 @@
     .message {
       margin-bottom: 1rem;
       padding: 1rem 1.25rem;
-      border-radius: 18px;
-      max-width: 85%;
+      border-radius: 15px;
+      max-width: 80%;
       line-height: 1.5;
     }
     .user-message {
-      background: linear-gradient(135deg, #0d8b3a, #0a6e2c);
+      background: #198754;
       color: white;
       margin-left: auto;
       border-bottom-right-radius: 5px;
     }
     .bot-message {
       background: white;
-      border: 1px solid #e0e0e0;
+      border: 1px solid #dee2e6;
       margin-right: auto;
       border-bottom-left-radius: 5px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .input-area {
       padding: 1.5rem;
-      border-top: 1px solid #e0e0e0;
+      border-top: 1px solid #dee2e6;
       background: white;
     }
     .upload-btn {
@@ -78,35 +82,29 @@
       display: inline-block;
       background: #e8f5e8;
       color: #0d8b3a;
-      padding: 0.5rem 1rem;
-      margin: 0.3rem;
-      border-radius: 25px;
-      font-size: 0.9rem;
+      padding: 0.4rem 0.8rem;
+      margin: 0.2rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
       cursor: pointer;
-      border: 1px solid #c8e6c9;
-      transition: all 0.3s ease;
+      transition: all 0.2s;
     }
     .suggestion-chip:hover {
-      background: #0d8b3a;
+      background: #198754;
       color: white;
-      transform: translateY(-2px);
     }
     .preview-image {
       max-width: 100%;
       max-height: 200px;
-      border-radius: 12px;
+      border-radius: 10px;
       margin-top: 10px;
-      border: 2px solid #e0e0e0;
     }
     .typing-indicator {
       display: inline-block;
       padding: 0.5rem 1rem;
       background: #e0e0e0;
-      border-radius: 18px;
+      border-radius: 15px;
       color: #666;
-    }
-    .typing-dots {
-      display: inline-block;
     }
     .typing-dots span {
       animation: typing 1.4s infinite;
@@ -118,24 +116,6 @@
     @keyframes typing {
       0%, 60%, 100% { opacity: 0.3; }
       30% { opacity: 1; }
-    }
-    .api-status {
-      position: fixed;
-      top: 70px;
-      right: 20px;
-      background: #4caf50;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
-    .error-status {
-      background: #f44336;
-    }
-    .warning-status {
-      background: #ff9800;
     }
     .solution-card {
       background: #e8f5e8;
@@ -151,95 +131,47 @@
       border-radius: 8px;
       margin: 0.5rem 0;
     }
-    .back-btn {
-      position: fixed;
-      top: 80px;
-      left: 20px;
-      z-index: 1000;
-    }
-    .nav-links {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      z-index: 1000;
-    }
   </style>
 </head>
 <body>
 
-  <!-- Back Button -->
-  <div class="back-btn">
-    <a href="index.html" class="btn btn-outline-success">
-      <i class="fas fa-arrow-left me-2"></i>হোম পেজ
-    </a>
-  </div>
-
-  <!-- Quick Navigation -->
-  <div class="nav-links">
-    <div class="btn-group">
-      <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
-        <i class="fas fa-link me-2"></i>দ্রুত নেভিগেশন
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="index.html"><i class="fas fa-home me-2"></i>হোম পেজ</a></li>
-        <li><a class="dropdown-item" href="about.html"><i class="fas fa-info-circle me-2"></i>পরিচয়</a></li>
-        <li><a class="dropdown-item" href="education.html"><i class="fas fa-graduation-cap me-2"></i>শিক্ষা</a></li>
-        <li><a class="dropdown-item" href="development.html"><i class="fas fa-chart-line me-2"></i>উন্নয়ন</a></li>
-        <li><a class="dropdown-item" href="welfare.html"><i class="fas fa-hands-helping me-2"></i>কল্যাণ</a></li>
-        <li><a class="dropdown-item" href="emergency.html"><i class="fas fa-phone-alt me-2"></i>জরুরি</a></li>
-        <li><a class="dropdown-item" href="contact.html"><i class="fas fa-envelope me-2"></i>যোগাযোগ</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- API Status -->
-  <div class="api-status warning-status" id="apiStatus">
-    <i class="fas fa-sync-alt me-1"></i>হাইব্রিড মোড এক্টিভ
-  </div>
-
-  <!-- নেভবার -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+  <!-- নেভবার - আপনার about.html এর মতোই -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top shadow">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="index.html">
-        <i class="fas fa-seedling me-2"></i>ঘুঘুমারী কৃষি AI
-      </a>
-      <span class="navbar-text">
-        <i class="fas fa-robot me-1"></i>হাইব্রিড AI মোড
-      </span>
-      
+      <a class="navbar-brand" href="index.html">ঘুঘুমারী</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i>হোম</a></li>
-          <li class="nav-item"><a class="nav-link" href="about.html"><i class="fas fa-info-circle me-1"></i>পরিচয়</a></li>
-          <li class="nav-item"><a class="nav-link" href="education.html"><i class="fas fa-graduation-cap me-1"></i>শিক্ষা</a></li>
-          <li class="nav-item"><a class="nav-link" href="development.html"><i class="fas fa-chart-line me-1"></i>উন্নয়ন</a></li>
-          <li class="nav-item"><a class="nav-link" href="index.html#beauty"><i class="fas fa-camera me-1"></i>সৌন্দর্য</a></li>
-          <li class="nav-item"><a class="nav-link" href="welfare.html"><i class="fas fa-hands-helping me-1"></i>কল্যাণ</a></li>
-          <li class="nav-item"><a class="nav-link active" href="agriculture.html"><i class="fas fa-tractor me-1"></i>কৃষি AI</a></li>
-          <li class="nav-item"><a class="nav-link" href="emergency.html"><i class="fas fa-phone-alt me-1"></i>জরুরি</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fas fa-envelope me-1"></i>যোগাযোগ</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html">হোম</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">পরিচয়</a></li>
+          <li class="nav-item"><a class="nav-link" href="education.html">শিক্ষা</a></li>
+          <li class="nav-item"><a class="nav-link" href="development.html">উন্নয়ন</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#beauty">ঘুঘুমারীর সৌন্দর্য</a></li>
+          <li class="nav-item"><a class="nav-link" href="welfare.html">কল্যাণ</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">যোগাযোগ</a></li>
+          <li class="nav-item"><a class="nav-link" href="emergency.html">জরুরি প্রয়োজন</a></li>
+          <li class="nav-item"><a class="nav-link active" href="agriculture.html">কৃষি</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
   <!-- হিরো সেকশন -->
-  <section class="py-4 bg-success text-white mt-5">
+  <section class="hero-section">
     <div class="container text-center">
-      <h1 class="display-6 fw-bold">কৃষি AI সহকারী</h1>
-      <p class="lead mb-0">বাংলা, ইংরেজি, বাংলিশ - সব ভাষায় সমাধান</p>
+      <h1 class="display-5 fw-bold">কৃষি AI সহকারী</h1>
+      <p class="lead">বাংলা, ইংরেজি বা বাংলিশে লিখুন - সঙ্গে সঙ্গে সমাধান পেয়ে যান</p>
     </div>
   </section>
 
   <!-- AI চ্যাটবট -->
-  <section class="container my-4">
+  <section class="container my-5">
     <div class="chat-container">
       <div class="chat-header">
-        <h4 class="mb-2"><i class="fas fa-robot me-2"></i>কৃষি বিশেষজ্ঞ AI</h4>
-        <p class="mb-0">স্মার্ট সমাধান - সবসময় উপলব্ধ</p>
+        <h4 class="mb-2"><i class="fas fa-robot me-2"></i>কৃষি AI সহকারী</h4>
+        <p class="mb-0">ছবি বা লেখা - দুভাবেই সমস্যার সমাধান</p>
       </div>
       
       <div class="chat-messages" id="chatMessages">
@@ -276,11 +208,11 @@
         
         <!-- টেক্সট ইনপুট -->
         <div class="input-group">
-          <input type="text" class="form-control form-control-lg" 
+          <input type="text" class="form-control" 
                  id="userInput" 
                  placeholder="আপনার কৃষি সমস্যা লিখুন... (বাংলা/English/Banglish)" 
                  onkeypress="handleKeyPress(event)">
-          <button class="btn btn-success btn-lg" type="button" onclick="sendMessage()" id="sendButton">
+          <button class="btn btn-success" type="button" onclick="sendMessage()" id="sendButton">
             <i class="fas fa-paper-plane"></i> পাঠান
           </button>
         </div>
@@ -295,74 +227,20 @@
     </div>
   </section>
 
-  <!-- ফিচারস -->
-  <section class="container my-5">
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card text-center h-100 border-0 shadow-sm">
-          <div class="card-body">
-            <i class="fas fa-bolt text-success fa-2x mb-3"></i>
-            <h5>হাইব্রিড AI</h5>
-            <p class="text-muted">API কাজ না করলেও উত্তর পাবেন</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card text-center h-100 border-0 shadow-sm">
-          <div class="card-body">
-            <i class="fas fa-database text-success fa-2x mb-3"></i>
-            <h5>বিস্তারিত ডাটাবেস</h5>
-            <p class="text-muted">৫০+ রোগের সমাধান সংরক্ষিত</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card text-center h-100 border-0 shadow-sm">
-          <div class="card-body">
-            <i class="fas fa-clock text-success fa-2x mb-3"></i>
-            <h5>২৪/৭ এক্সেস</h5>
-            <p class="text-muted">ইন্টারনেট ছাড়াও কাজ করে</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ফুটার -->
-  <footer class="bg-dark text-white text-center py-4 mt-5">
+  <!-- ফুটার - আপনার about.html এর মতোই -->
+  <footer class="bg-dark text-white text-center py-4">
     <div class="container">
-      <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী কৃষি AI | হাইব্রিড AI সলিউশন</p>
-      <p class="mb-0 small">জলঢাকা, নীলফামারী • ডেভেলপ করেছেন: আবু সায়েদ ইসলাম</p>
-      <div class="mt-3">
-        <a href="index.html" class="btn btn-outline-light btn-sm me-2">
-          <i class="fas fa-home me-1"></i>হোম পেজ
-        </a>
-        <a href="contact.html" class="btn btn-outline-light btn-sm me-2">
-          <i class="fas fa-envelope me-1"></i>যোগাযোগ
-        </a>
-        <a href="emergency.html" class="btn btn-outline-light btn-sm">
-          <i class="fas fa-phone-alt me-1"></i>জরুরি হেল্পলাইন
-        </a>
-      </div>
+      <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী, শিমুলবাড়ী</p>
+      <p class="mb-0 small">জলঢাকা, নীলফামারী । ডেভেলপ করেছেন: <strong>Abu Sayed Islam</strong><br>
+      Computer Science and Engineering, JnU</p>
     </div>
   </footer>
 
   <!-- JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Configuration
-    const GEMINI_API_KEY = 'AIzaSyA-2_oywpWvnqoZr8bM0J-NDVO4Xp9J9Yo';
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
-    
-    // DOM Elements
-    const chatMessages = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userInput');
-    const sendButton = document.getElementById('sendButton');
-    const apiStatus = document.getElementById('apiStatus');
-
     // Knowledge Database - Predefined Answers
     const KNOWLEDGE_BASE = {
-      // ধান সম্পর্কিত
       'ধান': {
         'পাতা সাদা': {
           problem: 'ধানের পাতা সাদা হয়ে যাওয়া',
@@ -393,29 +271,13 @@
               </ol>
             </div>
           `
-        },
-        'ব্লাস্ট': {
-          problem: 'ধান ব্লাস্ট রোগ',
-          causes: ['ছত্রাকজনিত রোগ', 'অতিরিক্ত আর্দ্রতা'],
-          solution: `
-            <div class="solution-card">
-              <h6><i class="fas fa-shield-virus me-2"></i>ব্লাস্ট রোগের চিকিত্সা:</h6>
-              <ol>
-                <li><strong>ট্রাইসাইক্লাজোল ৭৫% ডব্লিউপি:</strong> প্রতি লিটার পানিতে ১ গ্রাম</li>
-                <li><strong>কার্বেন্ডাজিম ৫০% ডব্লিউপি:</strong> প্রতি লিটার পানিতে ২ গ্রাম</li>
-                <li>১০ দিন পর পর ২ বার স্প্রে করুন</li>
-                <li>জমির পানি নিষ্কাশনের ব্যবস্থা করুন</li>
-              </ol>
-            </div>
-          `
         }
       },
       
-      // টমেটো সম্পর্কিত
       'টমেটো': {
         'ফুল আসছে না': {
           problem: 'টমেটো গাছে ফুল আসছে না',
-          causes: ['নাইট্রোজেন সার বেশি', 'অতিরিক্ত ছায়া', 'পানির অভাব', 'তাপমাত্রা বেশি'],
+          causes: ['নাইট্রোজেন সার বেশি', 'অতিরিক্ত ছায়া', 'পানির অভাব'],
           solution: `
             <div class="solution-card">
               <h6><i class="fas fa-flower me-2"></i>ফুল আসার উপায়:</h6>
@@ -424,29 +286,12 @@
                 <li><strong>আলো:</strong> পর্যাপ্ত সূর্যের আলোর ব্যবস্থা করুন</li>
                 <li><strong>পানি:</strong> নিয়মিত সঠিক পরিমাণ পানি দিন</li>
                 <li><strong>বোরন স্প্রে:</strong> ০.৫% বোরিক অ্যাসিড স্প্রে করুন</li>
-                <li>গাছের নিচের পাতা কিছুটা ছাঁটুন</li>
-              </ol>
-            </div>
-          `
-        },
-        'পাতা মরছে': {
-          problem: 'টমেটো পাতার দাগ',
-          causes: ['ব্লাইট রোগ', 'ব্যাকটেরিয়াজনিত রোগ'],
-          solution: `
-            <div class="solution-card">
-              <h6><i class="fas fa-leaf me-2"></i>পাতার রোগ চিকিত্সা:</h6>
-              <ol>
-                <li><strong>কপার অক্সিক্লোরাইড:</strong> প্রতি লিটার পানিতে ৩ গ্রাম</li>
-                <li><strong>ম্যানকোজেব:</strong> প্রতি লিটার পানিতে ২ গ্রাম</li>
-                <li>৭ দিন পর পর স্প্রে করুন</li>
-                <li>আক্রান্ত পাতা সংগ্রহ করে পুড়ে ফেলুন</li>
               </ol>
             </div>
           `
         }
       },
       
-      // আলু সম্পর্কিত
       'আলু': {
         'পোকা': {
           problem: 'আলুতে পোকা',
@@ -462,39 +307,17 @@
               </ol>
             </div>
           `
-        },
-        'ব্লাইট': {
-          problem: 'আলু ব্লাইট রোগ',
-          causes: ['দেরিতে ধসা রোগ', 'ছত্রাকজনিত'],
-          solution: `
-            <div class="solution-card">
-              <h6><i class="fas fa-virus me-2"></i>ব্লাইট রোগ নিয়ন্ত্রণ:</h6>
-              <ol>
-                <li><strong>মেটাল্যাক্সিল + ম্যানকোজেব:</strong> প্রতি লিটার পানিতে ২ গ্রাম</li>
-                <li><strong>ক্লোরোথালোনিল:</strong> প্রতি লিটার পানিতে ২ গ্রাম</li>
-                <li>বৃষ্টির আগে ও পরে স্প্রে করুন</li>
-                <li>আক্রান্ত গাছ তুলে ফেলুন</li>
-              </ol>
-            </div>
-          `
         }
       }
     };
 
-    // Update API status
-    function updateApiStatus(status, type = 'warning') {
-      const statusMap = {
-        'success': 'api-status',
-        'error': 'api-status error-status',
-        'warning': 'api-status warning-status'
-      };
-      
-      apiStatus.innerHTML = status;
-      apiStatus.className = statusMap[type];
-    }
+    // DOM Elements
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
 
     // Send message function
-    async function sendMessage() {
+    function sendMessage() {
       const message = userInput.value.trim();
       const imagePreview = document.getElementById('imagePreview');
       const hasImage = imagePreview.innerHTML !== '';
@@ -511,75 +334,21 @@
       userInput.value = '';
       imagePreview.innerHTML = '';
       sendButton.disabled = true;
-      userInput.disabled = true;
       
       // Show typing indicator
       showTypingIndicator();
       
-      try {
-        console.log('Trying Gemini API...');
-        
-        // Try Gemini API first
-        const aiResponse = await getGeminiResponse(message, hasImage);
+      // Simulate AI response delay
+      setTimeout(() => {
         removeTypingIndicator();
-        addMessage(aiResponse, 'bot');
-        updateApiStatus('<i class="fas fa-gem me-1"></i>Gemini AI Active', 'success');
-        
-      } catch (error) {
-        console.log('Gemini API failed, using knowledge base...');
-        
-        // Fallback to knowledge base
-        removeTypingIndicator();
-        const kbResponse = getKnowledgeBaseResponse(message);
-        addMessage(kbResponse, 'bot');
-        updateApiStatus('<i class="fas fa-database me-1"></i>স্থানীয় জ্ঞানভান্ডার', 'warning');
-      }
-      
-      sendButton.disabled = false;
-      userInput.disabled = false;
-      userInput.focus();
+        const response = getAIResponse(message);
+        addMessage(response, 'bot');
+        sendButton.disabled = false;
+      }, 1500);
     }
     
-    // Try Gemini API
-    async function getGeminiResponse(userMessage, hasImage = false) {
-      const prompt = `You are a Bengali agricultural expert. Answer in simple Bengali. 
-      User question: "${userMessage}". Provide practical, actionable advice for Bangladeshi farmers.`;
-      
-      const requestBody = {
-        contents: [{
-          parts: [{
-            text: prompt
-          }]
-        }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 1024,
-        }
-      };
-      
-      const response = await fetch(GEMINI_API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody)
-      });
-      
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      
-      if (!data.candidates || !data.candidates[0]?.content?.parts[0]?.text) {
-        throw new Error('Invalid API response');
-      }
-      
-      return data.candidates[0].content.parts[0].text;
-    }
-    
-    // Get response from knowledge base
-    function getKnowledgeBaseResponse(userMessage) {
+    // Get AI response from knowledge base
+    function getAIResponse(userMessage) {
       const lowerMessage = userMessage.toLowerCase();
       let response = '';
       
@@ -587,12 +356,11 @@
       for (const [crop, problems] of Object.entries(KNOWLEDGE_BASE)) {
         if (lowerMessage.includes(crop.toLowerCase())) {
           for (const [problemKey, solutionData] of Object.entries(problems)) {
-            if (lowerMessage.includes(problemKey.toLowerCase()) || problemKey === 'default') {
+            if (lowerMessage.includes(problemKey.toLowerCase())) {
               response = `
-                <strong>সমস্যা:</strong> ${solutionData.problem || 'কৃষি সমস্যা'}
+                <strong>সমস্যা:</strong> ${solutionData.problem}
                 ${solutionData.causes ? `<div class="disease-card"><strong>কারণ:</strong> ${solutionData.causes.join(', ')}</div>` : ''}
                 ${solutionData.solution}
-                <br><small><i class="fas fa-info-circle me-1"></i>স্থানীয় জ্ঞানভান্ডার থেকে প্রাপ্ত সমাধান</small>
               `;
               break;
             }
@@ -607,15 +375,8 @@
           <strong>আপনার প্রশ্নের জন্য ধন্যবাদ!</strong>
           <div class="solution-card">
             <p>আপনার সমস্যাটি সম্পর্কে আরো বিস্তারিত জানালে আমি আরও সঠিক সমাধান দিতে পারব।</p>
-            <p>আপনি চাইলে নিম্নলিখিত বিষয়গুলো সম্পর্কে জানতে পারেন:</p>
-            <ul>
-              <li>ধান, টমেটো, আলুর রোগবালাই</li>
-              <li>সার ও পানি ব্যবস্থাপনা</li>
-              <li>কীটপতঙ্গ নিয়ন্ত্রণ</li>
-              <li>ফসল সংগ্রহ ও সংরক্ষণ</li>
-            </ul>
+            <p>দ্রুত প্রশ্নগুলোর জন্য উপরের বাটনগুলো ব্যবহার করুন।</p>
           </div>
-          <small><i class="fas fa-database me-1"></i>স্থানীয় জ্ঞানভান্ডার থেকে প্রাপ্ত তথ্য</small>
         `;
       }
       
@@ -639,7 +400,7 @@
       messageDiv.className = `message ${sender === 'user' ? 'user-message' : 'bot-message'}`;
       
       if (sender === 'user') {
-        messageDiv.innerHTML = `<strong>👤 আপনি:</strong> ${text}`;
+        messageDiv.innerHTML = `<strong>আপনি:</strong> ${text}`;
         if (imageHtml) {
           messageDiv.innerHTML += `<div class="text-center">${imageHtml}</div>`;
         }
@@ -687,8 +448,6 @@
     // Initialize
     window.addEventListener('load', function() {
       chatMessages.scrollTop = chatMessages.scrollHeight;
-      userInput.focus();
-      updateApiStatus('<i class="fas fa-robot me-1"></i>হাইব্রিড AI প্রস্তুত', 'warning');
     });
   </script>
 </body>
