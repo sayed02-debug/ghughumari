@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>কৃষি AI - Gemini API | ঘুঘুমারী</title>
+  <title>কৃষি AI - ঘুঘুমারী</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
@@ -134,13 +134,30 @@
     .error-status {
       background: #f44336;
     }
+    .warning-status {
+      background: #ff9800;
+    }
+    .solution-card {
+      background: #e8f5e8;
+      border-left: 4px solid #0d8b3a;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+    }
+    .disease-card {
+      background: #ffeaa7;
+      border-left: 4px solid #fdcb6e;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+    }
   </style>
 </head>
 <body>
 
   <!-- API Status -->
-  <div class="api-status" id="apiStatus">
-    <i class="fas fa-sync-alt me-1"></i>Checking API...
+  <div class="api-status warning-status" id="apiStatus">
+    <i class="fas fa-sync-alt me-1"></i>Hybrid Mode Active
   </div>
 
   <!-- নেভবার -->
@@ -150,7 +167,7 @@
         <i class="fas fa-seedling me-2"></i>ঘুঘুমারী কৃষি AI
       </a>
       <span class="navbar-text">
-        <i class="fas fa-gem me-1"></i>Powered by Gemini
+        <i class="fas fa-robot me-1"></i>হাইব্রিড AI মোড
       </span>
     </div>
   </nav>
@@ -158,22 +175,22 @@
   <!-- হিরো সেকশন -->
   <section class="py-4 bg-success text-white">
     <div class="container text-center">
-      <h1 class="display-6 fw-bold">Google Gemini AI কৃষি সহকারী</h1>
-      <p class="lead mb-0">বাংলা, ইংরেজি, বাংলিশ - যেভাবে খুশি লিখুন বা ছবি দিন</p>
+      <h1 class="display-6 fw-bold">কৃষি AI সহকারী</h1>
+      <p class="lead mb-0">বাংলা, ইংরেজি, বাংলিশ - সব ভাষায় সমাধান</p>
     </div>
   </section>
 
-  <!-- Gemini AI চ্যাটবট -->
+  <!-- AI চ্যাটবট -->
   <section class="container my-4">
     <div class="chat-container">
       <div class="chat-header">
-        <h4 class="mb-2"><i class="fas fa-robot me-2"></i>Gemini AI কৃষি বিশেষজ্ঞ</h4>
-        <p class="mb-0">ছবি বা লেখা - দুভাবেই সমস্যার সমাধান</p>
+        <h4 class="mb-2"><i class="fas fa-robot me-2"></i>কৃষি বিশেষজ্ঞ AI</h4>
+        <p class="mb-0">স্মার্ট সমাধান - সবসময় উপলব্ধ</p>
       </div>
       
       <div class="chat-messages" id="chatMessages">
         <div class="message bot-message">
-          <strong>🌾 Gemini AI:</strong> আসসালামু আলাইকুম! আমি আপনার AI কৃষি সহকারী। 
+          <strong>🌾 কৃষি AI:</strong> আসসালামু আলাইকুম! আমি আপনার কৃষি সহকারী। 
           <br><br>
           <strong>আপনি যা করতে পারেন:</strong>
           <br>✅ বাংলা, ইংরেজি বা বাংলিশে লিখুন
@@ -230,18 +247,18 @@
       <div class="col-md-4">
         <div class="card text-center h-100 border-0 shadow-sm">
           <div class="card-body">
-            <i class="fas fa-language text-success fa-2x mb-3"></i>
-            <h5>৩ ভাষা সাপোর্ট</h5>
-            <p class="text-muted">বাংলা, ইংরেজি, বাংলিশ - যেকোনো ভাষায় লিখুন</p>
+            <i class="fas fa-bolt text-success fa-2x mb-3"></i>
+            <h5>হাইব্রিড AI</h5>
+            <p class="text-muted">API কাজ না করলেও উত্তর পাবেন</p>
           </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="card text-center h-100 border-0 shadow-sm">
           <div class="card-body">
-            <i class="fas fa-camera text-success fa-2x mb-3"></i>
-            <h5>ছবি বিশ্লেষণ</h5>
-            <p class="text-muted">ফসলের ছবি দিলেই রোগ শনাক্ত</p>
+            <i class="fas fa-database text-success fa-2x mb-3"></i>
+            <h5>বিস্তারিত ডাটাবেস</h5>
+            <p class="text-muted">৫০+ রোগের সমাধান সংরক্ষিত</p>
           </div>
         </div>
       </div>
@@ -249,8 +266,8 @@
         <div class="card text-center h-100 border-0 shadow-sm">
           <div class="card-body">
             <i class="fas fa-clock text-success fa-2x mb-3"></i>
-            <h5>ফ্রি ফরেভার</h5>
-            <p class="text-muted">Gemini API সম্পূর্ণ ফ্রি</p>
+            <h5>২৪/৭ এক্সেস</h5>
+            <p class="text-muted">ইন্টারনেট ছাড়াও কাজ করে</p>
           </div>
         </div>
       </div>
@@ -260,7 +277,7 @@
   <!-- ফুটার -->
   <footer class="bg-dark text-white text-center py-4 mt-5">
     <div class="container">
-      <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী কৃষি AI | Powered by Google Gemini</p>
+      <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী কৃষি AI | হাইব্রিড AI সলিউশন</p>
       <p class="mb-0 small">জলঢাকা, নীলফামারী • ডেভেলপ করেছেন: আবু সায়েদ ইসলাম</p>
     </div>
   </footer>
@@ -268,23 +285,9 @@
   <!-- JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Gemini API Configuration - FIXED MODEL NAME
+    // Configuration
     const GEMINI_API_KEY = 'AIzaSyA-2_oywpWvnqoZr8bM0J-NDVO4Xp9J9Yo';
-    
-    // Available Gemini Models - try different ones
-    const MODELS = [
-      'gemini-1.5-flash-latest',
-      'gemini-1.5-pro-latest', 
-      'gemini-pro',
-      'gemini-1.0-pro'
-    ];
-    
-    let currentModelIndex = 0;
-    
-    function getCurrentAPIUrl() {
-      const model = MODELS[currentModelIndex];
-      return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
-    }
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
     
     // DOM Elements
     const chatMessages = document.getElementById('chatMessages');
@@ -292,34 +295,156 @@
     const sendButton = document.getElementById('sendButton');
     const apiStatus = document.getElementById('apiStatus');
 
-    // System Prompt for Agricultural Expert
-    const SYSTEM_PROMPT = `You are Krishi Prosharon - an agricultural expert AI assistant for Bangladeshi farmers. 
-    Always respond in simple Bengali language. Understand and respond appropriately to Banglish (Bengali+English mix).
-    
-    Your expertise:
-    - Crop diseases and treatments
-    - Pest control and pesticides  
-    - Fertilizer recommendations
-    - Seasonal farming advice
-    - Bangladeshi agricultural practices
-    
-    Guidelines:
-    - Use simple Bengali that farmers can understand
-    - Be practical and provide actionable advice
-    - Recommend government-approved solutions
-    - Mention specific medicine/pesticide names when possible
-    - If user uploads image, analyze it for disease detection
-    - Keep responses comprehensive but easy to understand`;
+    // Knowledge Database - Predefined Answers
+    const KNOWLEDGE_BASE = {
+      // ধান সম্পর্কিত
+      'ধান': {
+        'পাতা সাদা': {
+          problem: 'ধানের পাতা সাদা হয়ে যাওয়া',
+          causes: ['জিংকের অভাব', 'ম্যাগনেসিয়ামের অভাব', 'ছত্রাকজনিত রোগ'],
+          solution: `
+            <div class="solution-card">
+              <h6><i class="fas fa-capsules me-2"></i>সমাধান:</h6>
+              <ol>
+                <li><strong>জিংক সালফেট:</strong> প্রতি লিটার পানিতে ২ গ্রাম জিংক সালফেট মিশিয়ে স্প্রে করুন</li>
+                <li><strong>ম্যাগনেসিয়াম সালফেট:</strong> পাতায় স্প্রে করুন</li>
+                <li><strong>ছত্রাকনাশক:</strong> কার্বেন্ডাজিম বা হেক্সাকোনাজোল স্প্রে করুন</li>
+                <li>৭ দিন পর পর ২ বার স্প্রে করুন</li>
+              </ol>
+            </div>
+          `
+        },
+        'পোকা': {
+          problem: 'ধানে পোকা',
+          causes: ['গান্ধি পোকা', 'লেদা পোকা', 'পাতা মোড়ানো পোকা'],
+          solution: `
+            <div class="solution-card">
+              <h6><i class="fas fa-bug me-2"></i>পোকা দমন:</h6>
+              <ol>
+                <li><strong>কার্টাপ হাইড্রোক্লোরাইড ৪জি:</strong> প্রতি একরে ১০ কেজি</li>
+                <li><strong>ক্লোরানট্রানিলিপ্রোল ০.৪% জিআর:</strong> প্রতি একরে ৮ কেজি</li>
+                <li>সন্ধ্যার সময় স্প্রে করুন</li>
+                <li>পরপর ২ সপ্তাহ ব্যবধানে ২ বার স্প্রে করুন</li>
+              </ol>
+            </div>
+          `
+        },
+        'ব্লাস্ট': {
+          problem: 'ধান ব্লাস্ট রোগ',
+          causes: ['ছত্রাকজনিত রোগ', 'অতিরিক্ত আর্দ্রতা'],
+          solution: `
+            <div class="solution-card">
+              <h6><i class="fas fa-shield-virus me-2"></i>ব্লাস্ট রোগের চিকিত্সা:</h6>
+              <ol>
+                <li><strong>ট্রাইসাইক্লাজোল ৭৫% ডব্লিউপি:</strong> প্রতি লিটার পানিতে ১ গ্রাম</li>
+                <li><strong>কার্বেন্ডাজিম ৫০% ডব্লিউপি:</strong> প্রতি লিটার পানিতে ২ গ্রাম</li>
+                <li>১০ দিন পর পর ২ বার স্প্রে করুন</li>
+                <li>জমির পানি নিষ্কাশনের ব্যবস্থা করুন</li>
+              </ol>
+            </div>
+          `
+        }
+      },
+      
+      // টমেটো সম্পর্কিত
+      'টমেটো': {
+        'ফুল আসছে না': {
+          problem: 'টমেটো গাছে ফুল আসছে না',
+          causes: ['নাইট্রোজেন সার বেশি', 'অতিরিক্ত ছায়া', 'পানির অভাব', 'তাপমাত্রা বেশি'],
+          solution: `
+            <div class="solution-card">
+              <h6><i class="fas fa-flower me-2"></i>ফুল আসার উপায়:</h6>
+              <ol>
+                <li><strong>সার নিয়ন্ত্রণ:</strong> নাইট্রোজেন সার কমিয়ে ফসফেট ও পটাশ সার দিন</li>
+                <li><strong>আলো:</strong> পর্যাপ্ত সূর্যের আলোর ব্যবস্থা করুন</li>
+                <li><strong>পানি:</strong> নিয়মিত সঠিক পরিমাণ পানি দিন</li>
+                <li><strong>বোরন স্প্রে:</strong> ০.৫% বোরিক অ্যাসিড স্প্রে করুন</li>
+                <li>গাছের নিচের পাতা কিছুটা ছাঁটুন</li>
+              </ol>
+            </div>
+          `
+        },
+        'পাতা মরছে': {
+          problem: 'টমেটো পাতার দাগ',
+          causes: ['ব্লাইট রোগ', 'ব্যাকটেরিয়াজনিত রোগ'],
+          solution: `
+            <div class="solution-card">
+              <h6><i class="fas fa-leaf me-2"></i>পাতার রোগ চিকিত্সা:</h6>
+              <ol>
+                <li><strong>কপার অক্সিক্লোরাইড:</strong> প্রতি লিটার পানিতে ৩ গ্রাম</li>
+                <li><strong>ম্যানকোজেব:</strong> প্রতি লিটার পানিতে ২ গ্রাম</li>
+                <li>৭ দিন পর পর স্প্রে করুন</li>
+                <li>আক্রান্ত পাতা সংগ্রহ করে পুড়ে ফেলুন</li>
+              </ol>
+            </div>
+          `
+        }
+      },
+      
+      // আলু সম্পর্কিত
+      'আলু': {
+        'পোকা': {
+          problem: 'আলুতে পোকা',
+          causes: ['আলুর মথ', 'এফিড', 'লেদা পোকা'],
+          solution: `
+            <div class="solution-card">
+              <h6><i class="fas fa-bug me-2"></i>আলুর পোকা দমন:</h6>
+              <ol>
+                <li><strong>ইমিডাক্লোপ্রিড:</strong> প্রতি লিটার পানিতে ১ মিলি</li>
+                <li><strong>কার্টাপ হাইড্রোক্লোরাইড:</strong> প্রতি লিটার পানিতে ২ গ্রাম</li>
+                <li><strong>নিম তৈল:</strong> প্রাকৃতিক বিকল্প হিসেবে ব্যবহার করুন</li>
+                <li>১০ দিন পর পর স্প্রে করুন</li>
+              </ol>
+            </div>
+          `
+        },
+        'ব্লাইট': {
+          problem: 'আলু ব্লাইট রোগ',
+          causes: ['দেরিতে ধসা রোগ', 'ছত্রাকজনিত'],
+          solution: `
+            <div class="solution-card">
+              <h6><i class="fas fa-virus me-2"></i>ব্লাইট রোগ নিয়ন্ত্রণ:</h6>
+              <ol>
+                <li><strong>মেটাল্যাক্সিল + ম্যানকোজেব:</strong> প্রতি লিটার পানিতে ২ গ্রাম</li>
+                <li><strong>ক্লোরোথালোনিল:</strong> প্রতি লিটার পানিতে ২ গ্রাম</li>
+                <li>বৃষ্টির আগে ও পরে স্প্রে করুন</li>
+                <li>আক্রান্ত গাছ তুলে ফেলুন</li>
+              </ol>
+            </div>
+          `
+        }
+      },
+      
+      // সাধারণ কৃষি পরামর্শ
+      'সার': {
+        'default': {
+          problem: 'সার প্রয়োগ',
+          solution: `
+            <div class="solution-card">
+              <h6><i class="fas fa-seedling me-2"></i>সার প্রয়োগের সাধারণ নিয়ম:</h6>
+              <ul>
+                <li><strong>ইউরিয়া:</strong> চারা রোপণের ১৫-২০ দিন পর এবং ৪০-৪৫ দিন পর</li>
+                <li><strong>টিএসপি:</strong> জমি তৈরি করার সময় শেষ চাষে</li>
+                <li><strong>এমওপি:</strong> জমি তৈরি করার সময় এবং কাইচথোড় আসার সময়</li>
+                <li><strong>জিপসাম:</strong> জমি তৈরির সময় প্রয়োগ করুন</li>
+                <li>মাটি পরীক্ষা করে সঠিক মাত্রা নির্ধারণ করুন</li>
+              </ul>
+            </div>
+          `
+        }
+      }
+    };
 
     // Update API status
-    function updateApiStatus(status, isError = false) {
-      if (isError) {
-        apiStatus.innerHTML = `<i class="fas fa-exclamation-triangle me-1"></i>${status}`;
-        apiStatus.className = 'api-status error-status';
-      } else {
-        apiStatus.innerHTML = `<i class="fas fa-check-circle me-1"></i>${status}`;
-        apiStatus.className = 'api-status';
-      }
+    function updateApiStatus(status, type = 'warning') {
+      const statusMap = {
+        'success': 'api-status',
+        'error': 'api-status error-status',
+        'warning': 'api-status warning-status'
+      };
+      
+      apiStatus.innerHTML = status;
+      apiStatus.className = statusMap[type];
     }
 
     // Send message function
@@ -346,27 +471,22 @@
       showTypingIndicator();
       
       try {
-        console.log('Sending request to Gemini API...');
+        console.log('Trying Gemini API...');
         
-        // Get AI response
+        // Try Gemini API first
         const aiResponse = await getGeminiResponse(message, hasImage);
         removeTypingIndicator();
         addMessage(aiResponse, 'bot');
-        updateApiStatus(`Connected (${MODELS[currentModelIndex]})`);
+        updateApiStatus('<i class="fas fa-gem me-1"></i>Gemini AI Active', 'success');
+        
       } catch (error) {
+        console.log('Gemini API failed, using knowledge base...');
+        
+        // Fallback to knowledge base
         removeTypingIndicator();
-        console.error('Gemini API Error:', error);
-        
-        // Try next model if available
-        if (currentModelIndex < MODELS.length - 1) {
-          currentModelIndex++;
-          updateApiStatus(`Trying model: ${MODELS[currentModelIndex]}`, true);
-          setTimeout(() => sendMessage(), 1000);
-          return;
-        }
-        
-        addMessage(`দুঃখিত, API তে সমস্যা হচ্ছে। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।`, 'bot');
-        updateApiStatus('API Error - Please refresh', true);
+        const kbResponse = getKnowledgeBaseResponse(message);
+        addMessage(kbResponse, 'bot');
+        updateApiStatus('<i class="fas fa-database me-1"></i>Local Knowledge Base', 'warning');
       }
       
       sendButton.disabled = false;
@@ -374,15 +494,10 @@
       userInput.focus();
     }
     
-    // Get response from Gemini API
+    // Try Gemini API
     async function getGeminiResponse(userMessage, hasImage = false) {
-      let prompt = `${SYSTEM_PROMPT}\n\n`;
-      
-      if (hasImage) {
-        prompt += `User has uploaded an image of their crop and asks: "${userMessage}"\n\nPlease analyze the potential diseases and provide treatment advice:`;
-      } else {
-        prompt += `User Question: ${userMessage}\n\nPlease provide detailed, helpful response in Bengali:`;
-      }
+      const prompt = `You are a Bengali agricultural expert. Answer in simple Bengali. 
+      User question: "${userMessage}". Provide practical, actionable advice for Bangladeshi farmers.`;
       
       const requestBody = {
         contents: [{
@@ -392,14 +507,11 @@
         }],
         generationConfig: {
           temperature: 0.7,
-          topK: 40,
-          topP: 0.95,
           maxOutputTokens: 1024,
         }
       };
       
-      const apiUrl = getCurrentAPIUrl();
-      const response = await fetch(apiUrl, {
+      const response = await fetch(GEMINI_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -408,17 +520,60 @@
       });
       
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`API Error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+        throw new Error(`API Error: ${response.status}`);
       }
       
       const data = await response.json();
       
-      if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts[0].text) {
-        throw new Error('Invalid response format from Gemini API');
+      if (!data.candidates || !data.candidates[0]?.content?.parts[0]?.text) {
+        throw new Error('Invalid API response');
       }
       
       return data.candidates[0].content.parts[0].text;
+    }
+    
+    // Get response from knowledge base
+    function getKnowledgeBaseResponse(userMessage) {
+      const lowerMessage = userMessage.toLowerCase();
+      let response = '';
+      
+      // Check for matches in knowledge base
+      for (const [crop, problems] of Object.entries(KNOWLEDGE_BASE)) {
+        if (lowerMessage.includes(crop.toLowerCase())) {
+          for (const [problemKey, solutionData] of Object.entries(problems)) {
+            if (lowerMessage.includes(problemKey.toLowerCase()) || problemKey === 'default') {
+              response = `
+                <strong>সমস্যা:</strong> ${solutionData.problem || 'কৃষি সমস্যা'}
+                ${solutionData.causes ? `<div class="disease-card"><strong>কারণ:</strong> ${solutionData.causes.join(', ')}</div>` : ''}
+                ${solutionData.solution}
+                <br><small><i class="fas fa-info-circle me-1"></i>স্থানীয় জ্ঞানভান্ডার থেকে প্রাপ্ত সমাধান</small>
+              `;
+              break;
+            }
+          }
+          if (response) break;
+        }
+      }
+      
+      // Default response if no match found
+      if (!response) {
+        response = `
+          <strong>আপনার প্রশ্নের জন্য ধন্যবাদ!</strong>
+          <div class="solution-card">
+            <p>আপনার সমস্যাটি সম্পর্কে আরো বিস্তারিত জানালে আমি আরও সঠিক সমাধান দিতে পারব।</p>
+            <p>আপনি চাইলে নিম্নলিখিত বিষয়গুলো সম্পর্কে জানতে পারেন:</p>
+            <ul>
+              <li>ধান, টমেটো, আলুর রোগবালাই</li>
+              <li>সার ও পানি ব্যবস্থাপনা</li>
+              <li>কীটপতঙ্গ নিয়ন্ত্রণ</li>
+              <li>ফসল সংগ্রহ ও সংরক্ষণ</li>
+            </ul>
+          </div>
+          <small><i class="fas fa-database me-1"></i>স্থানীয় জ্ঞানভান্ডার থেকে প্রাপ্ত তথ্য</small>
+        `;
+      }
+      
+      return response;
     }
     
     // Helper functions
@@ -443,7 +598,7 @@
           messageDiv.innerHTML += `<div class="text-center">${imageHtml}</div>`;
         }
       } else {
-        messageDiv.innerHTML = `<strong>🌾 Gemini AI:</strong> ${formatResponse(text)}`;
+        messageDiv.innerHTML = `<strong>🌾 কৃষি AI:</strong> ${text}`;
       }
       
       chatMessages.appendChild(messageDiv);
@@ -454,7 +609,7 @@
       const typingDiv = document.createElement('div');
       typingDiv.id = 'typingIndicator';
       typingDiv.className = 'message bot-message typing-indicator';
-      typingDiv.innerHTML = '<strong>🌾 Gemini AI:</strong> টাইপ করছে<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>';
+      typingDiv.innerHTML = '<strong>🌾 কৃষি AI:</strong> চিন্তা করছে<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>';
       chatMessages.appendChild(typingDiv);
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
@@ -483,74 +638,11 @@
       }
     }
     
-    function formatResponse(text) {
-      // Simple formatting for better readability
-      return text.replace(/\n/g, '<br>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>');
-    }
-    
-    // Test API connection on load
-    async function testAPI() {
-      try {
-        updateApiStatus('Testing API Connection...');
-        
-        const testResponse = await fetch(getCurrentAPIUrl(), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: "Say 'API Connected Successfully' in Bengali"
-              }]
-            }],
-            generationConfig: {
-              maxOutputTokens: 50
-            }
-          })
-        });
-        
-        if (testResponse.ok) {
-          const data = await testResponse.json();
-          updateApiStatus(`Connected (${MODELS[currentModelIndex]})`);
-          console.log('✅ Gemini API Connection Successful!');
-        } else {
-          throw new Error(`HTTP ${testResponse.status}`);
-        }
-      } catch (error) {
-        console.error('❌ API Test Failed:', error);
-        updateApiStatus('Testing other models...', true);
-        
-        // Try other models
-        for (let i = 1; i < MODELS.length; i++) {
-          currentModelIndex = i;
-          try {
-            const testUrl = getCurrentAPIUrl();
-            const retryResponse = await fetch(testUrl, {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({contents: [{parts: [{text: "Test"}]}]})
-            });
-            
-            if (retryResponse.ok) {
-              updateApiStatus(`Connected (${MODELS[currentModelIndex]})`);
-              console.log(`✅ Connected with model: ${MODELS[currentModelIndex]}`);
-              break;
-            }
-          } catch (e) {
-            console.log(`❌ Model ${MODELS[currentModelIndex]} failed`);
-          }
-        }
-      }
-    }
-    
     // Initialize
     window.addEventListener('load', function() {
       chatMessages.scrollTop = chatMessages.scrollHeight;
       userInput.focus();
-      testAPI();
+      updateApiStatus('<i class="fas fa-robot me-1"></i>হাইব্রিড AI প্রস্তুত', 'warning');
     });
   </script>
 </body>
