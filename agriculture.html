@@ -164,6 +164,9 @@
     // === API Keys ===
     const WEATHER_API_KEY = '6561455c200e43306bb6913524c5eeb1';
 
+    // === লাইভ প্রক্সি সার্ভার (Render.com) ===
+    const PROXY_BASE = 'https://ghughumari.onrender.com'; // লাইভ URL
+
     // === লাইভ আবহাওয়া ===
     async function loadWeather() {
       try {
@@ -250,48 +253,35 @@
         if (msg.includes('proxy_405') || msg.includes('405 not allowed')) {
           document.getElementById('ai-advice').innerHTML = `
             <div class="text-danger">
-              <strong>সমস্যা:</strong> ব্রাউজার থেকে প্রক্সি সার্ভারে POST পাঠানো যাচ্ছে না (HTTP 405)। এটি সাধারণত ঘটে যখন পেজটি স্ট্যাটিক হোস্টে রাখা আছে (উদাহরণ: GitHub Pages) কিন্তু প্রক্সি সার্ভার চালু নেই।
-                <br><strong>সমাধান:</strong> ১) লোকালভাবে প্রক্সি চালান: প্রজেক্ট রুটে চালান 'npm install' এবং 'npm start'। ২) বা প্রক্সি হোস্ট করুন এবং 'PROXY_BASE'-এর মান সেট করুন (উদাহরণ: 'http://your-server.example.com').
+              <strong>সমস্যা:</strong> প্রক্সি সার্ভারে POST পাঠানো যাচ্ছে না।<br>
+              <strong>সমাধান:</strong> প্রক্সি চালু আছে কি না চেক করুন: <a href="${PROXY_BASE}" target="_blank">${PROXY_BASE}</a>
             </div>
           `;
           return;
         }
 
-        // If model not found, call ListModels to show available models and guidance
         if (msg.includes('404') || msg.includes('not found') || msg.includes('models/')) {
           try {
             const models = await listAvailableModels();
             const names = (models && models.length) ? models.map(m => m.name).slice(0,8) : [];
             document.getElementById('ai-advice').innerHTML = `
               <div class="text-danger">
-                <strong>সমস্যা:</strong> মডেল পাওয়া যায়নি (HTTP 404)।<br>
-                <strong>কারণ:</strong> আপনার API কী-তে মডেল অ্যাক্সেস নেই অথবা মডেলটি এই API সংস্করণে সমর্থিত নয়।<br>
-                <strong>উপলব্ধ মডেল:</strong> ${names.length ? names.join(', ') : 'তথ্য পাওয়া যায়নি'}<br>
-                <strong>সমাধান:</strong> কনসোলে গিয়ে মডেল সক্রিয় করুন বা একটি উপলব্ধ মডেল নাম ব্যবহার করুন।<br>
+                <strong>সমস্যা:</strong> মডেল পাওয়া যায়নি।<br>
+                <strong>উপলব্ধ মডেল:</strong> ${names.length ? names.join(', ') : 'তথ্য নেই'}<br>
                 <strong>হেল্পলাইন:</strong> ১৬৭৬৭
               </div>
             `;
             return;
           } catch (lmErr) {
-            console.error('ListModels Error:', lmErr);
-            document.getElementById('ai-advice').innerHTML = `
-              <div class="text-danger">
-                <strong>সমস্যা:</strong> ${error.message}<br>
-                <strong>সমাধান:</strong> ৫ মিনিট অপেক্ষা করুন বা API কী চেক করুন।<br>
-                <strong>হেল্পলাইন:</strong> ১৬৭৬৭
-              </div>
-            `;
+            document.getElementById('ai-advice').innerHTML = `<div class="text-danger">সমস্যা: ${error.message}</div>`;
             return;
           }
         }
 
         document.getElementById('ai-advice').innerHTML = `
           <div class="text-danger">
-            <strong>Gemini AI কৃষি পরামর্শ</strong><br>
-            <em>ধানে পাতা হলুদ</em><br>
-            <strong>সমস্যা:</strong> উত্তরের স্ট্রাকচার পাওয়া যায়নি।<br>
-            <strong>সমাধান:</strong> ৫ মিনিট অপেক্ষা করুন বা API কী চেক করুন।<br>
-            <strong>হেল্পলাইন:</strong> ১৬৭৬৭ (কৃষি অফিস)
+            <strong>সমস্যা:</strong> ${error.message || 'অজানা'}<br>
+            <strong>হেল্পলাইন:</strong> ১৬৭৬৭
           </div>
         `;
       }
@@ -301,10 +291,8 @@
     window.addEventListener('load', loadWeather);
 
     // === Gemini Chatbot ===
-    const chatMessages = []; // {role: 'user'|'assistant', text: ''}
-    const PREFERRED_MODEL = 'models/gemini-2.5-pro'; // server will use this by default if provided
-    // Default proxy base for local testing. If you deploy the proxy elsewhere, set this to that origin (e.g. 'https://your-proxy.example.com')
-    const PROXY_BASE = 'http://localhost:3000'; // set to '' if proxy is same origin
+    const chatMessages = [];
+    const PREFERRED_MODEL = 'models/gemini-2.5-pro';
 
     function renderChat() {
       const win = document.getElementById('chat-window');
@@ -341,21 +329,17 @@
       renderChat();
       input.value = '';
 
-      // show thinking placeholder
       chatMessages.push({ role: 'assistant', text: 'Gemini AI চিন্তা করছে...' });
       renderChat();
 
       try {
-        // build simple conversation prompt
         let conv = `তুমি একজন কৃষি পরামর্শদাতা। সহজ ও ব্যবহারিক উপদেশ দাও (বাংলায়)।\n`;
         chatMessages.forEach(m => {
           if (m.role === 'user') conv += `Farmer: ${m.text}\n`;
           if (m.role === 'assistant') conv += `Assistant: ${m.text}\n`;
         });
 
-        // Try generation with fallback (generateContent -> generateMessage)
         const answer = await generateWithFallback(PREFERRED_MODEL, conv, { temperature: 0.3, maxOutputTokens: 300 });
-        // remove the thinking placeholder
         if (chatMessages.length && chatMessages[chatMessages.length - 1].text === 'Gemini AI চিন্তা করছে...') chatMessages.pop();
         chatMessages.push({ role: 'assistant', text: answer });
         renderChat();
@@ -363,86 +347,41 @@
       } catch (err) {
         if (chatMessages.length && chatMessages[chatMessages.length - 1].text === 'Gemini AI চিন্তা করছে...') chatMessages.pop();
         console.error('Chat Error:', err);
-
-        // Diagnose common errors (proxy 405, model 404)
         const msgText = String(err.message || err).toLowerCase();
         if (msgText.includes('proxy_405') || msgText.includes('405 not allowed')) {
-          const help = `সমস্যা: আপনার ব্রাউজার থেকে প্রক্সি সার্ভারে POST পাঠানো যাচ্ছে না (HTTP 405)। এটি সাধারণত ঘটে যখন পেজটি স্ট্যাটিক হোস্টে রাখা আছে এবং প্রক্সি সার্ভার চালু নেই।\nসমাধান: লোকালভাবে প্রক্সি চালান: প্রজেক্ট রুটে 'npm install' এবং 'npm start' চালান, অথবা প্রক্সি হোস্ট করে 'PROXY_BASE' সেট করুন (উদাহরণ: 'http://your-server.example.com')`;
-          chatMessages.push({ role: 'assistant', text: help });
-          renderChat();
-          return;
+          chatMessages.push({ role: 'assistant', text: `প্রক্সি সার্ভারে সমস্যা। চেক করুন: ${PROXY_BASE}` });
+        } else if (msgText.includes('404')) {
+          chatMessages.push({ role: 'assistant', text: 'মডেল পাওয়া যায়নি। হেল্পলাইন: ১৬৭৬৭' });
+        } else {
+          chatMessages.push({ role: 'assistant', text: `সমস্যা: ${err.message || err}` });
         }
-
-        // If model not found (404) or message says model not found, try ListModels and show guidance
-        if (msgText.includes('404') || msgText.includes('not found') || msgText.includes('models/') ) {
-          try {
-            const models = await listAvailableModels();
-            const names = (models && models.length) ? models.map(m => m.name).slice(0,8) : [];
-            const help = `মডেল পাওয়া যায়নি (HTTP 404). উপলব্ধ মডেলসমূহ: ${names.length? names.join(', ') : 'তথ্য নেই'}.\nআপনার API কী-তে মডেল অ্যাক্সেস না থাকতে পারে বা মডেলটি এই API সংস্করণের জন্য সমর্থিত নয়। ListModels পরীক্ষা করুন বা কনসোলে মডেল সক্রিয় করুন।`;
-            chatMessages.push({ role: 'assistant', text: help });
-            renderChat();
-            return;
-          } catch (lmErr) {
-            const fallback = `সমস্যা: ${err.message} — ৫ মিনিট অপেক্ষা করুন বা API কী চেক করুন। হেল্পলাইন: ১৬৭৬৭`;
-            chatMessages.push({ role: 'assistant', text: fallback });
-            renderChat();
-            return;
-          }
-        }
-
-        const errMsg = `সমস্যা: ${err.message || err} — ৫ মিনিট অপেক্ষা করুন বা API কী চেক করুন। হেল্পলাইন: ১৬৭৬৭`;
-        chatMessages.push({ role: 'assistant', text: errMsg });
         renderChat();
       }
     }
 
-    // Fetch list of available models from the server proxy
     async function listAvailableModels() {
       const url = `${PROXY_BASE}/api/models`;
       const res = await fetch(url, { method: 'GET' });
-      if (!res.ok) {
-        const body = await res.text();
-        throw new Error(`ListModels failed: HTTP ${res.status}: ${body}`);
-      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      if (data.models && Array.isArray(data.models)) return data.models;
-      return [];
+      return data.models || [];
     }
 
-    // Call server proxy to generate text (server handles model/method fallback)
     async function generateWithFallback(modelName, promptText, opts = {}) {
       const url = `${PROXY_BASE}/api/generate`;
       const body = { model: modelName, prompt: promptText, temperature: opts.temperature || 0.3, maxOutputTokens: opts.maxOutputTokens || 300 };
       const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
 
-      // Helpful handling for common deployment mistake: calling proxy from a static host (GitHub Pages etc.)
       if (!res.ok) {
         const t = await res.text();
-        if (res.status === 405) {
-          // 405 usually means the origin (where the HTML is hosted) doesn't accept POSTs to this path
-          throw new Error('PROXY_405: 405 Not Allowed - the POST to the proxy was rejected. This often happens when the site is hosted as static pages (e.g. GitHub Pages) and no server is running at the proxy origin. Run the proxy (`npm start`) or deploy the proxy to a server and set `PROXY_BASE` to its origin.');
-        }
-        throw new Error(`Proxy generate failed: HTTP ${res.status}: ${t}`);
+        if (res.status === 405) throw new Error('PROXY_405: 405 Not Allowed - প্রক্সি সার্ভার চালু নেই।');
+        throw new Error(`Proxy failed: HTTP ${res.status}: ${t}`);
       }
 
       const data = await res.json();
-
-      // Robust extraction similar to server-side shapes
-      if (!data) throw new Error('Empty response from proxy');
       if (data.outputText) return String(data.outputText).trim();
-      if (data.candidates && Array.isArray(data.candidates) && data.candidates.length) {
-        const c = data.candidates[0];
-        if (c.content && c.content.parts && Array.isArray(c.content.parts)) {
-          const p = c.content.parts.find(x => x.text);
-          if (p && p.text) return String(p.text).trim();
-        }
-        if (Array.isArray(c.content) && c.content.length && c.content[0].text) return String(c.content[0].text).trim();
-        if (c.outputText) return String(c.outputText).trim();
-        if (c.message && Array.isArray(c.message.content) && c.message.content[0] && c.message.content[0].text) return String(c.message.content[0].text).trim();
-      }
-      // Chat-style message in response.message
-      if (data.message && Array.isArray(data.message.content) && data.message.content[0] && data.message.content[0].text) return String(data.message.content[0].text).trim();
-      // fallback: convert whole response to string
+      if (data.candidates?.[0]?.content?.parts?.[0]?.text) return String(data.candidates[0].content.parts[0].text).trim();
+      if (data.message?.content?.[0]?.text) return String(data.message.content[0].text).trim();
       return JSON.stringify(data);
     }
 
