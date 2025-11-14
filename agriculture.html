@@ -222,34 +222,54 @@
       renderChat();
       input.value = '';
 
-      chatMessages.push({ role: 'assistant', text: 'চিন্তা করছি...' });
+      chatMessages.push({ role: 'assistant', text: 'সার্ভার জাগছে... অপেক্ষা করুন (১০-৩০ সেকেন্ড)' });
       renderChat();
 
-      try {
-        let conv = `তুমি একজন বাংলাদেশী কৃষি বিশেষজ্ঞ। সহজ বাংলায় উত্তর দাও।\n`;
-        chatMessages.forEach(m => {
-          if (m.role === 'user') conv += `কৃষক: ${m.text}\n`;
-          if (m.role === 'assistant') conv += `বিশেষজ্ঞ: ${m.text}\n`;
-        });
+      let retryCount = 0;
+      const maxRetries = 3;
+      let answer = null;
 
-        const answer = await generateWithFallback(PREFERRED_MODEL, conv, { temperature: 0.4, maxOutputTokens: 300 });
-        if (chatMessages[chatMessages.length - 1].text === 'চিন্তা করছি...') chatMessages.pop();
-        chatMessages.push({ role: 'assistant', text: answer });
-        renderChat();
-      } catch (err) {
-        if (chatMessages[chatMessages.length - 1].text === 'চিন্তা করছি...') chatMessages.pop();
-        chatMessages.push({ role: 'assistant', text: `সমস্যা: ${err.message || 'ইন্টারনেট চেক করুন'}` });
-        renderChat();
+      while (retryCount < maxRetries && !answer) {
+        try {
+          let conv = `তুমি একজন বাংলাদেশী কৃষি বিশেষজ্ঞ। সহজ বাংলায় উত্তর দাও।\n`;
+          chatMessages.forEach(m => {
+            if (m.role === 'user') conv += `কৃষক: ${m.text}\n`;
+            if (m.role === 'assistant') conv += `বিশেষজ্ঞ: ${m.text}\n`;
+          });
+
+          answer = await generateWithFallback(PREFERRED_MODEL, conv, { temperature: 0.4, maxOutputTokens: 300 });
+          if (chatMessages[chatMessages.length - 1].text.includes('জাগছে')) chatMessages.pop();
+          chatMessages.push({ role: 'assistant', text: answer });
+          renderChat();
+        } catch (err) {
+          retryCount++;
+          if (retryCount < maxRetries) {
+            chatMessages[chatMessages.length - 1].text = `চেষ্টা ${retryCount}/${maxRetries}: ${err.message || 'পুনরায় চেষ্টা করছি...'}`;
+            renderChat();
+            await new Promise(resolve => setTimeout(resolve, 5000)); // 5s wait
+          } else {
+            if (chatMessages[chatMessages.length - 1].text.includes('জাগছে')) chatMessages.pop();
+            chatMessages.push({ role: 'assistant', text: `সমস্যা: ${err.message || 'ইন্টারনেট/সার্ভার চেক করুন'}। হেল্পলাইন: ১৬৭৬৭` });
+            renderChat();
+          }
+        }
       }
     }
 
     async function generateWithFallback(model, prompt, opts) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
       const res = await fetch(`${PROXY_BASE}/api/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model, prompt, ...opts })
+        body: JSON.stringify({ model, prompt, ...opts }),
+        signal: controller.signal
       });
-      if (!res.ok) throw new Error('প্রক্সি সার্ভারে সমস্যা');
+
+      clearTimeout(timeoutId);
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}: প্রক্সি সার্ভারে সমস্যা (সার্ভার জাগান: ${PROXY_BASE}/api/models)`);
       const data = await res.json();
       return data.outputText || data.candidates?.[0]?.content?.parts?.[0]?.text || JSON.stringify(data);
     }
