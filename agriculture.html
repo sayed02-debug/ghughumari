@@ -389,13 +389,46 @@
         renderChat();
 
       } catch (err) {
-        // replace thinking placeholder
         if (chatMessages.length && chatMessages[chatMessages.length - 1].text === 'Gemini AI চিন্তা করছে...') chatMessages.pop();
-        const errMsg = `সমস্যা: ${err.message} — ৫ মিনিট অপেক্ষা করুন বা API কী চেক করুন। হেল্পলাইন: ১৬৭৬৭`;
+        console.error('Chat Error:', err);
+
+        // If model not found (404) or message says model not found, try ListModels and show guidance
+        const msgText = String(err.message || err).toLowerCase();
+        if (msgText.includes('404') || msgText.includes('not found') || msgText.includes('models/') ) {
+          try {
+            const models = await listAvailableModels();
+            const names = (models && models.length) ? models.map(m => m.name).slice(0,8) : [];
+            const help = `মডেল পাওয়া যায়নি (HTTP 404). উপলব্ধ মডেলসমূহ: ${names.length? names.join(', ') : 'তথ্য নেই'}.\nআপনার API কী-তে মডেল অ্যাক্সেস না থাকতে পারে বা মডেলটি এই API সংস্করণের জন্য সমর্থিত নয়। ListModels পরীক্ষা করুন বা কনসোলে মডেল সক্রিয় করুন।`;
+            chatMessages.push({ role: 'assistant', text: help });
+            renderChat();
+            return;
+          } catch (lmErr) {
+            const fallback = `সমস্যা: ${err.message} — ৫ মিনিট অপেক্ষা করুন বা API কী চেক করুন। হেল্পলাইন: ১৬৭৬৭`;
+            chatMessages.push({ role: 'assistant', text: fallback });
+            renderChat();
+            return;
+          }
+        }
+
+        const errMsg = `সমস্যা: ${err.message || err} — ৫ মিনিট অপেক্ষা করুন বা API কী চেক করুন। হেল্পলাইন: ১৬৭৬৭`;
         chatMessages.push({ role: 'assistant', text: errMsg });
         renderChat();
-        console.error('Chat Error:', err);
       }
+    }
+
+    // Fetch list of available models from the API to help diagnose 404s
+    async function listAvailableModels() {
+      const url = `https://generativelanguage.googleapis.com/v1/models?key=${GEMINI_API_KEY}`;
+      const res = await fetch(url, { method: 'GET' });
+      if (!res.ok) {
+        const body = await res.text();
+        throw new Error(`ListModels failed: HTTP ${res.status}: ${body}`);
+      }
+      const data = await res.json();
+      // Response commonly contains `models` array
+      if (data.models && Array.isArray(data.models)) return data.models;
+      // fallback: return raw object wrapped
+      return [];
     }
 
     document.addEventListener('DOMContentLoaded', () => {
