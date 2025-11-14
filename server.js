@@ -1,4 +1,4 @@
-// server.js — FINAL WORKING VERSION
+// server.js — FINAL 100% WORKING VERSION
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
@@ -9,7 +9,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname)); // Optional: serve static files
+app.use(express.static(__dirname)); // Serve static files if needed
 
 // Environment
 const PORT = process.env.PORT || 3000;
@@ -20,6 +20,7 @@ if (!GEMINI_KEY) {
   process.exit(1);
 }
 
+// Base URL
 const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1/models';
 
 // GET /api/models — List available models
@@ -29,21 +30,24 @@ app.get('/api/models', async (req, res) => {
     const response = await axios.get(url, { timeout: 20000 });
     res.json(response.data);
   } catch (error) {
-  console.error('Models API Error:', error.response?.data || error.message);
+    console.error('Models Error:', error.response?.data || error.message);
     const status = error.response?.status || 500;
     const msg = error.response?.data?.error?.message || 'Failed to fetch models';
     res.status(status).json({ error: { message: msg } });
   }
 });
 
-// POST /api/generate — Generate text with safety handling
+// POST /api/generate — Generate text using gemini-1.5-flash
 app.post('/api/generate', async (req, res) => {
-  const { 
-    model = 'gemini-pro', 
+  let { 
+    model = 'gemini-1.5-flash', 
     prompt = '', 
     temperature = 0.4, 
     maxOutputTokens = 300 
   } = req.body;
+
+  // Force to working model
+  model = 'gemini-1.5-flash'; // Free, fast, accessible to all
 
   if (!prompt.trim()) {
     return res.status(400).json({ error: { message: 'Prompt is required' } });
@@ -67,7 +71,7 @@ app.post('/api/generate', async (req, res) => {
       ]
     };
 
-    console.log(`Generating with model: ${model}`);
+    console.log(`Generating with ${model}`);
     const response = await axios.post(url, body, { 
       timeout: 30000,
       headers: { 'Content-Type': 'application/json' }
@@ -84,11 +88,11 @@ app.post('/api/generate', async (req, res) => {
     if (text) {
       res.json({ outputText: text.trim() });
     } else {
-      const reason = candidate.finishReason;
+      const reason = candidate.finishReason || 'অজানা';
       if (reason === 'SAFETY') {
-        res.json({ outputText: 'দুঃখিত, এই প্রশ্নের উত্তর দেওয়া যাচ্ছে না (নিরাপত্তা নীতি)। অন্যভাবে জিজ্ঞাসা করুন।' });
+        res.json({ outputText: 'দুঃখিত, এই প্রশ্নের উত্তর দেওয়া যাচ্ছে না। অন্যভাবে জিজ্ঞাসা করুন।' });
       } else {
-        res.json({ outputText: `উত্তর তৈরি হয়নি। কারণ: ${reason || 'অজানা'}` });
+        res.json({ outputText: `উত্তর তৈরি হয়নি। কারণ: ${reason}` });
       }
     }
 
@@ -100,7 +104,7 @@ app.post('/api/generate', async (req, res) => {
 
     if (status === 404) {
       res.status(404).json({
-        error: { message: `Model "${model}" not found. Use 'gemini-pro'.` }
+        error: { message: `Model "${model}" not found or not accessible. Use 'gemini-1.5-flash'.` }
       });
     } else if (status === 403) {
       res.status(403).json({
@@ -117,19 +121,19 @@ app.post('/api/generate', async (req, res) => {
 // Health check
 app.get('/', (req, res) => {
   res.send(`
-    <h2>Ghughumari AI Proxy Server</h2>
+    <h2>Ghughumari AI Proxy</h2>
     <p>Status: Running</p>
+    <p>Model: <strong>gemini-1.5-flash</strong></p>
     <p>Endpoints:</p>
     <ul>
       <li>GET <a href="/api/models" target="_blank">/api/models</a></li>
       <li>POST /api/generate</li>
     </ul>
-    <p><strong>Model:</strong> gemini-pro</p>
   `);
 });
 
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Live URL: ${process.env.RENDER_EXTERNAL_URL || 'https://ghughumari.onrender.com'}`);
+  console.log(`Live: https://ghughumari.onrender.com`);
 });
