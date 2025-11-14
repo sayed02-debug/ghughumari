@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>দান ও তহবিল - ঘুঘুমারী</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body {
+      background: #f8f9fa;
+      font-family: 'SolaimanLipi', Arial, sans-serif;
+    }
+    .navbar-brand {
+      font-weight: bold;
+    }
+    .hero-section {
+      background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+      color: white;
+      padding: 4rem 0;
+      margin-top: 56px;
+    }
+    .project-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+      border: 1px solid #e9ecef;
+      transition: transform 0.3s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-5px);
+    }
+    .progress {
+      height: 12px;
+      border-radius: 10px;
+      margin: 1rem 0;
+    }
+    .progress-bar {
+      border-radius: 10px;
+    }
+    .donation-amount-btn {
+      border: 2px solid #198754;
+      color: #198754;
+      background: white;
+      padding: 0.75rem 1.5rem;
+      margin: 0.5rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+    .donation-amount-btn:hover,
+    .donation-amount-btn.active {
+      background: #198754;
+      color: white;
+    }
+    .urgent-badge {
+      background: #dc3545;
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .completed-badge {
+      background: #198754;
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+    .payment-method {
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 0.5rem 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .payment-method:hover {
+      border-color: #198754;
+      background: #e8f5e8;
+    }
+    .payment-method.selected {
+      border-color: #198754;
+      background: #d4edda;
+    }
+    .impact-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #198754;
+    }
+    .testimonial-card {
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- নেভবার -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top shadow">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">ঘুঘুমারী</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">হোম</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">পরিচয়</a></li>
+          <li class="nav-item"><a class="nav-link" href="education.html">শিক্ষা</a></li>
+          <li class="nav-item"><a class="nav-link" href="development.html">উন্নয়ন</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#beauty">ঘুঘুমারীর সৌন্দর্য</a></li>
+          <li class="nav-item"><a class="nav-link" href="welfare.html">কল্যাণ</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">যোগাযোগ</a></li>
+          <li class="nav-item"><a class="nav-link" href="emergency.html">জরুরি প্রয়োজন</a></li>
+          <li class="nav-item"><a class="nav-link" href="agriculture.html">কৃষি</a></li>
+          <li class="nav-item"><a class="nav-link" href="local-business.html">স্থানীয় ব্যবসা</a></li>
+          <li class="nav-item"><a class="nav-link active" href="donation.html">দান ও তহবিল</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- হিরো সেকশন -->
+  <section class="hero-section">
+    <div class="container text-center">
+      <h1 class="display-5 fw-bold">দান ও তহবিল সংগ্রহ</h1>
+      <p class="lead mb-0">গ্রামের উন্নয়ন ও মানুষের সেবায় আপনার অংশগ্রহণ</p>
+    </div>
+  </section>
+
+  <!-- ইম্প্যাক্ট স্ট্যাটস -->
+  <section class="py-5 bg-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-3 mb-4">
+          <div class="impact-number">৫+</div>
+          <p class="text-muted">সম্পন্ন প্রকল্প</p>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="impact-number">২.৫ লাখ+</div>
+          <p class="text-muted">সংগৃহীত টাকা</p>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="impact-number">৩০০+</div>
+          <p class="text-muted">দাতা পরিবার</p>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="impact-number">১০০%</div>
+          <p class="text-muted">ট্রান্সপারেন্সি</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- বর্তমান প্রকল্প -->
+  <section class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-5 fw-bold text-success">চলমান প্রকল্পসমূহ</h2>
+      
+      <!-- প্রকল্প ১: ঈদ উপহার -->
+      <div class="project-card">
+        <span class="urgent-badge">জরুরি</span>
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h4 class="text-success mb-3">ঈদ উপহার বিতরণ ২০২৫</h4>
+            <p class="text-muted mb-3">গরিব ও অসহায় পরিবারের মধ্যে ঈদের আনন্দ পৌঁছে দিতে সহায়তা করুন। ১০০+ পরিবারকে ঈদ উপহার বিতরণের লক্ষ্য।</p>
+            
+            <div class="d-flex justify-content-between mb-2">
+              <span>লক্ষ্য: ৫০,০০০ টাকা</span>
+              <span>সংগৃহীত: ৩০,০০০ টাকা</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-success" style="width: 60%"></div>
+            </div>
+            
+            <div class="d-flex justify-content-between text-muted small">
+              <span>৬০% সম্পন্ন</span>
+              <span>বাকি ১৫ দিন</span>
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="mb-3">
+              <h3 class="text-success fw-bold">২০,০০০ টাকা</h3>
+              <small class="text-muted">বাকি আছে</small>
+            </div>
+            <button class="btn btn-success btn-lg w-100" onclick="openDonationModal('ঈদ উপহার বিতরণ ২০২৫', 50000, 30000)">
+              <i class="fas fa-hand-holding-heart me-2"></i>সহায়তা করুন
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- প্রকল্প ২: মসজিদ উন্নয়ন -->
+      <div class="project-card">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h4 class="text-success mb-3">মসজিদ সংস্কার প্রকল্প</h4>
+            <p class="text-muted mb-3">ঘুঘুমারী কেন্দ্রীয় জামে মসজিদের প্রয়োজনীয় সংস্কার ও উন্নয়ন কাজ। নতুন ফ্যান, লাইটিং এবং রং করার কাজ।</p>
+            
+            <div class="d-flex justify-content-between mb-2">
+              <span>লক্ষ্য: ১,০০,০০০ টাকা</span>
+              <span>সংগৃহীত: ৭৫,০০০ টাকা</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-success" style="width: 75%"></div>
+            </div>
+            
+            <div class="d-flex justify-content-between text-muted small">
+              <span>৭৫% সম্পন্ন</span>
+              <span>বাকি ৩০ দিন</span>
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="mb-3">
+              <h3 class="text-success fw-bold">২৫,০০০ টাকা</h3>
+              <small class="text-muted">বাকি আছে</small>
+            </div>
+            <button class="btn btn-success btn-lg w-100" onclick="openDonationModal('মসজিদ সংস্কার প্রকল্প', 100000, 75000)">
+              <i class="fas fa-hand-holding-heart me-2"></i>সহায়তা করুন
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- প্রকল্প ৩: রাস্তা উন্নয়ন -->
+      <div class="project-card">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h4 class="text-success mb-3">গ্রাম্য রাস্তা উন্নয়ন</h4>
+            <p class="text-muted mb-3">অনুভবপুর থেকে শিমুলবাড়ী পর্যন্ত কাঁচা রাস্তাটি পাকা করার প্রকল্প। বর্ষায় চলাচলের অসুবিধা দূরীকরণ।</p>
+            
+            <div class="d-flex justify-content-between mb-2">
+              <span>লক্ষ্য: ২,০০,০০০ টাকা</span>
+              <span>সংগৃহীত: ৫০,০০০ টাকা</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-warning" style="width: 25%"></div>
+            </div>
+            
+            <div class="d-flex justify-content-between text-muted small">
+              <span>২৫% সম্পন্ন</span>
+              <span>বাকি ৬০ দিন</span>
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="mb-3">
+              <h3 class="text-success fw-bold">১,৫০,০০০ টাকা</h3>
+              <small class="text-muted">বাকি আছে</small>
+            </div>
+            <button class="btn btn-success btn-lg w-100" onclick="openDonationModal('গ্রাম্য রাস্তা উন্নয়ন', 200000, 50000)">
+              <i class="fas fa-hand-holding-heart me-2"></i>সহায়তা করুন
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- সম্পন্ন প্রকল্প -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-5 fw-bold text-success">সম্পন্ন প্রকল্পসমূহ</h2>
+      <div class="row">
+        
+        <div class="col-md-4 mb-4">
+          <div class="project-card text-center">
+            <span class="completed-badge">সম্পন্ন</span>
+            <i class="fas fa-tshirt fa-3x text-success mb-3"></i>
+            <h5 class="text-success">শীতবস্ত্র বিতরণ ২০২৪</h5>
+            <p class="text-muted">৫০+ গরিব পরিবারে শীতবস্ত্র বিতরণ</p>
+            <div class="text-success fw-bold">৪৫,০০০ টাকা সংগ্রহ</div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <div class="project-card text-center">
+            <span class="completed-badge">সম্পন্ন</span>
+            <i class="fas fa-graduation-cap fa-3x text-success mb-3"></i>
+            <h5 class="text-success">শিক্ষাবৃত্তি ২০২৪</h5>
+            <p class="text-muted">১৫ জন মেধাবী শিক্ষার্থীর পড়ালেখার খরচ</p>
+            <div class="text-success fw-bold">৭৫,০০০ টাকা সংগ্রহ</div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <div class="project-card text-center">
+            <span class="completed-badge">সম্পন্ন</span>
+            <i class="fas fa-hand-holding-medical fa-3x text-success mb-3"></i>
+            <h5 class="text-success">চিকিৎসা সহায়তা</h5>
+            <p class="text-muted">৩ জন অসুস্থ ব্যক্তির চিকিৎসা খরচ</p>
+            <div class="text-success fw-bold">৬০,০০০ টাকা সংগ্রহ</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ডোনেশন মডাল -->
+  <div class="modal fade" id="donationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" id="modalProjectTitle">প্রকল্পের নাম</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6 class="text-success mb-3">দানের পরিমাণ নির্বাচন করুন</h6>
+              <div class="text-center mb-4">
+                <button class="btn donation-amount-btn" onclick="selectAmount(500)">৫০০ টাকা</button>
+                <button class="btn donation-amount-btn" onclick="selectAmount(1000)">১,০০০ টাকা</button>
+                <button class="btn donation-amount-btn" onclick="selectAmount(2000)">২,০০০ টাকা</button>
+                <button class="btn donation-amount-btn" onclick="selectAmount(5000)">৫,০০০ টাকা</button>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">কাস্টম এমাউন্ট</label>
+                <input type="number" class="form-control" id="customAmount" placeholder="অন্যান্য পরিমাণ" onchange="selectCustomAmount(this.value)">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">আপনার নাম (ঐচ্ছিক)</label>
+                <input type="text" class="form-control" id="donorName" placeholder="আপনার নাম">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">মোবাইল নম্বর (ঐচ্ছিক)</label>
+                <input type="tel" class="form-control" id="donorPhone" placeholder="০১********">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <h6 class="text-success mb-3">পেমেন্ট মেথড</h6>
+              
+              <div class="payment-method" onclick="selectPayment('bkash')">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="bkash">
+                  <label class="form-check-label fw-bold" for="bkash">
+                    <i class="fas fa-mobile-alt me-2 text-success"></i>বিকাশ
+                  </label>
+                </div>
+                <small class="text-muted">বিকাশ নম্বর: 017********</small>
+              </div>
+
+              <div class="payment-method" onclick="selectPayment('nagad')">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="nagad">
+                  <label class="form-check-label fw-bold" for="nagad">
+                    <i class="fas fa-wallet me-2 text-primary"></i>নগদ
+                  </label>
+                </div>
+                <small class="text-muted">নগদ নম্বর: 017********</small>
+              </div>
+
+              <div class="payment-method" onclick="selectPayment('rocket')">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="rocket">
+                  <label class="form-check-label fw-bold" for="rocket">
+                    <i class="fas fa-rocket me-2 text-danger"></i>রকেট
+                  </label>
+                </div>
+                <small class="text-muted">রকেট নম্বর: 017********</small>
+              </div>
+
+              <div class="mt-4 p-3 bg-light rounded">
+                <div class="d-flex justify-content-between mb-2">
+                  <span>দানের পরিমাণ:</span>
+                  <span id="selectedAmountDisplay">০ টাকা</span>
+                </div>
+                <div class="d-flex justify-content-between fw-bold">
+                  <span>মোট:</span>
+                  <span id="totalAmountDisplay">০ টাকা</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
+          <button type="button" class="btn btn-success" onclick="processDonation()">
+            <i class="fas fa-donate me-2"></i>দান করুন
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ফুটার -->
+  <footer class="bg-dark text-white text-center py-4">
+    <div class="container">
+      <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী, শিমুলবাড়ী</p>
+      <p class="mb-0 small">জলঢাকা, নীলফামারী । ডেভেলপ করেছেন: <strong>Abu Sayed Islam</strong><br>
+      Computer Science and Engineering, JnU</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let selectedAmount = 0;
+    let selectedProject = '';
+    let selectedPaymentMethod = '';
+
+    function openDonationModal(projectName, targetAmount, collectedAmount) {
+      selectedProject = projectName;
+      document.getElementById('modalProjectTitle').textContent = projectName;
+      selectedAmount = 0;
+      updateAmountDisplay();
+      
+      // Reset selections
+      document.querySelectorAll('.donation-amount-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelectorAll('.payment-method').forEach(method => {
+        method.classList.remove('selected');
+      });
+      document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+        radio.checked = false;
+      });
+      document.getElementById('customAmount').value = '';
+      document.getElementById('donorName').value = '';
+      document.getElementById('donorPhone').value = '';
+      
+      const modal = new bootstrap.Modal(document.getElementById('donationModal'));
+      modal.show();
+    }
+
+    function selectAmount(amount) {
+      selectedAmount = amount;
+      document.querySelectorAll('.donation-amount-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      document.getElementById('customAmount').value = '';
+      updateAmountDisplay();
+    }
+
+    function selectCustomAmount(amount) {
+      selectedAmount = parseInt(amount) || 0;
+      document.querySelectorAll('.donation-amount-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      updateAmountDisplay();
+    }
+
+    function selectPayment(method) {
+      selectedPaymentMethod = method;
+      document.querySelectorAll('.payment-method').forEach(method => {
+        method.classList.remove('selected');
+      });
+      event.currentTarget.classList.add('selected');
+      document.getElementById(method).checked = true;
+    }
+
+    function updateAmountDisplay() {
+      document.getElementById('selectedAmountDisplay').textContent = selectedAmount.toLocaleString() + ' টাকা';
+      document.getElementById('totalAmountDisplay').textContent = selectedAmount.toLocaleString() + ' টাকা';
+    }
+
+    function processDonation() {
+      if (selectedAmount === 0) {
+        alert('দয়া করে দানের পরিমাণ নির্বাচন করুন।');
+        return;
+      }
+
+      if (!selectedPaymentMethod) {
+        alert('দয়া করে পেমেন্ট মেথড নির্বাচন করুন।');
+        return;
+      }
+
+      const donorName = document.getElementById('donorName').value || 'অজানা দাতা';
+      
+      // Show success message (Demo purpose)
+      alert(`ধন্যবাদ ${donorName}!\n\nআপনি ${selectedAmount} টাকা দান করেছেন "${selectedProject}" প্রকল্পে।\n\nপেমেন্ট মেথড: ${selectedPaymentMethod}\n\nআসন্ন আপডেটের জন্য অপেক্ষা করুন।`);
+      
+      // Close modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('donationModal'));
+      modal.hide();
+
+      // Reset form
+      selectedAmount = 0;
+      selectedPaymentMethod = '';
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Donation page loaded successfully');
+    });
+  </script>
+</body>
+</html>
