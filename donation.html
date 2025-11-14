@@ -99,6 +99,10 @@
       padding: 2rem;
       margin: 1rem 0;
     }
+    .madrasa-card {
+      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+      border-left: 4px solid #ffc107;
+    }
   </style>
 </head>
 <body>
@@ -165,7 +169,47 @@
     <div class="container">
       <h2 class="text-center mb-5 fw-bold text-success">চলমান প্রকল্পসমূহ</h2>
       
-      <!-- প্রকল্প ১: ঈদ উপহার -->
+      <!-- প্রকল্প ১: মাদ্রাসা উন্নয়ন -->
+      <div class="project-card madrasa-card">
+        <span class="urgent-badge">অগ্রাধিকার</span>
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h4 class="text-success mb-3">ঘুঘুমারী দারুল কুরআন এবতেদায়ী ও এতিমখানা হাফিজিয়া মাদ্রাসা</h4>
+            <p class="text-muted mb-3">ধর্মীয় শিক্ষা ও এতিম শিশুদের লালন-পালনের জন্য মাদ্রাসাটির উন্নয়ন কাজ। নতুন ভবন নির্মাণ, আসবাবপত্র ও শিক্ষা উপকরণ সংগ্রহ।</p>
+            
+            <div class="d-flex justify-content-between mb-2">
+              <span>লক্ষ্য: ৫,০০,০০০ টাকা</span>
+              <span>সংগৃহীত: ১,৫০,০০০ টাকা</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-warning" style="width: 30%"></div>
+            </div>
+            
+            <div class="d-flex justify-content-between text-muted small">
+              <span>৩০% সম্পন্ন</span>
+              <span>বাকি ৯০ দিন</span>
+            </div>
+
+            <div class="mt-3">
+              <small class="text-muted">
+                <strong>মাদ্রাসা কমিটির যোগাযোগ:</strong><br>
+                সভাপতি: ০১৭******** | সম্পাদক: ০১৮********
+              </small>
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="mb-3">
+              <h3 class="text-success fw-bold">৩,৫০,০০০ টাকা</h3>
+              <small class="text-muted">বাকি আছে</small>
+            </div>
+            <button class="btn btn-warning btn-lg w-100" onclick="openDonationModal('ঘুঘুমারী দারুল কুরআন এবতেদায়ী ও এতিমখানা হাফিজিয়া মাদ্রাসা', 500000, 150000)">
+              <i class="fas fa-mosque me-2"></i>মাদ্রাসায় দান করুন
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- প্রকল্প ২: ঈদ উপহার -->
       <div class="project-card">
         <span class="urgent-badge">জরুরি</span>
         <div class="row align-items-center">
@@ -198,7 +242,7 @@
         </div>
       </div>
 
-      <!-- প্রকল্প ২: মসজিদ উন্নয়ন -->
+      <!-- প্রকল্প ৩: মসজিদ উন্নয়ন -->
       <div class="project-card">
         <div class="row align-items-center">
           <div class="col-md-8">
@@ -230,12 +274,12 @@
         </div>
       </div>
 
-      <!-- প্রকল্প ৩: রাস্তা উন্নয়ন -->
+      <!-- প্রকল্প ৪: রাস্তা উন্নয়ন -->
       <div class="project-card">
         <div class="row align-items-center">
           <div class="col-md-8">
             <h4 class="text-success mb-3">গ্রাম্য রাস্তা উন্নয়ন</h4>
-            <p class="text-muted mb-3">___ থেকে শিমুলবাড়ী পর্যন্ত কাঁচা রাস্তাটি পাকা করার প্রকল্প। বর্ষায় চলাচলের অসুবিধা দূরীকরণ।</p>
+            <p class="text-muted mb-3">__ থেকে শিমুলবাড়ী পর্যন্ত কাঁচা রাস্তাটি পাকা করার প্রকল্প। বর্ষায় চলাচলের অসুবিধা দূরীকরণ।</p>
             
             <div class="d-flex justify-content-between mb-2">
               <span>লক্ষ্য: ২,০০,০০০ টাকা</span>
@@ -305,6 +349,44 @@
     </div>
   </section>
 
+  <!-- মাদ্রাসা সম্পর্কে -->
+  <section class="py-5 bg-white">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h3 class="text-success mb-4">ঘুঘুমারী দারুল কুরআন এবতেদায়ী ও এতিমখানা হাফিজিয়া মাদ্রাসা</h3>
+          <p class="text-muted mb-4">
+            আমাদের গ্রামের এই মাদ্রাসাটি ধর্মীয় শিক্ষা বিস্তার এবং এতিম শিশুদের লালন-পালনের গুরুত্বপূর্ণ কাজ করে যাচ্ছে। 
+            বর্তমানে ৫০+ শিক্ষার্থী এবং ১০+ এতিম শিশু এখানে শিক্ষা ও থাকা-খাওয়ার সুযোগ পাচ্ছে।
+          </p>
+          <div class="row">
+            <div class="col-6">
+              <ul class="list-unstyled">
+                <li><i class="fas fa-check text-success me-2"></i>কুরআন শিক্ষা</li>
+                <li><i class="fas fa-check text-success me-2"></i>বাংলা-ইংরেজি শিক্ষা</li>
+                <li><i class="fas fa-check text-success me-2"></i>এতিম পালন</li>
+              </ul>
+            </div>
+            <div class="col-6">
+              <ul class="list-unstyled">
+                <li><i class="fas fa-check text-success me-2"></i>হিফজ বিভাগ</li>
+                <li><i class="fas fa-check text-success me-2"></i>বোর্ডিং সুবিধা</li>
+                <li><i class="fas fa-check text-success me-2"></i>মুক্তিযোদ্ধা কোটা</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="testimonial-card">
+            <i class="fas fa-quote-left fa-2x text-success mb-3"></i>
+            <p class="fst-italic">"এই মাদ্রাসা আমাদের গ্রামের শিশুদের জন্য আশীর্বাদ স্বরূপ। ধর্মীয় ও সাধারণ শিক্ষার সমন্বয় এখানে সম্ভব হচ্ছে।"</p>
+            <strong>- স্থানীয় বাসিন্দা</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ডোনেশন মডাল -->
   <div class="modal fade" id="donationModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
@@ -337,6 +419,11 @@
               <div class="mb-3">
                 <label class="form-label">মোবাইল নম্বর (ঐচ্ছিক)</label>
                 <input type="tel" class="form-control" id="donorPhone" placeholder="০১********">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">বার্তা (ঐচ্ছিক)</label>
+                <textarea class="form-control" id="donorMessage" placeholder="কোনো বিশেষ নির্দেশনা থাকলে" rows="2"></textarea>
               </div>
             </div>
 
@@ -383,6 +470,14 @@
                   <span id="totalAmountDisplay">০ টাকা</span>
                 </div>
               </div>
+
+              <div class="alert alert-info mt-3">
+                <small>
+                  <i class="fas fa-info-circle me-2"></i>
+                  <strong>মাদ্রাসা কমিটির সরাসরি যোগাযোগ:</strong><br>
+                  সভাপতি: ০১৭******** | সম্পাদক: ০১৮********
+                </small>
+              </div>
             </div>
           </div>
         </div>
@@ -400,7 +495,7 @@
   <footer class="bg-dark text-white text-center py-4">
     <div class="container">
       <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী</p>
-      <p class="mb-0 small">শিমুলবাড়ী, জলঢাকা, নীলফামারী । ডেভেলপ করেছেন: <strong>Abu Sayed Islam</strong><br>
+      <p class="mb-0 small">শিমুলবাড়ীজলঢাকা, নীলফামারী । ডেভেলপ করেছেন: <strong>Abu Sayed Islam</strong><br>
       Computer Science and Engineering, JnU</p>
     </div>
   </footer>
@@ -431,6 +526,7 @@
       document.getElementById('customAmount').value = '';
       document.getElementById('donorName').value = '';
       document.getElementById('donorPhone').value = '';
+      document.getElementById('donorMessage').value = '';
       
       const modal = new bootstrap.Modal(document.getElementById('donationModal'));
       modal.show();
@@ -480,9 +576,10 @@
       }
 
       const donorName = document.getElementById('donorName').value || 'অজানা দাতা';
+      const donorMessage = document.getElementById('donorMessage').value || 'কোনো বার্তা নেই';
       
       // Show success message (Demo purpose)
-      alert(`ধন্যবাদ ${donorName}!\n\nআপনি ${selectedAmount} টাকা দান করেছেন "${selectedProject}" প্রকল্পে।\n\nপেমেন্ট মেথড: ${selectedPaymentMethod}\n\nআসন্ন আপডেটের জন্য অপেক্ষা করুন।`);
+      alert(`ধন্যবাদ ${donorName}!\n\nআপনি ${selectedAmount} টাকা দান করেছেন "${selectedProject}" প্রকল্পে।\n\nপেমেন্ট মেথড: ${selectedPaymentMethod}\n\nআপনার বার্তা: ${donorMessage}\n\nআসন্ন আপডেটের জন্য অপেক্ষা করুন।`);
       
       // Close modal
       const modal = bootstrap.Modal.getInstance(document.getElementById('donationModal'));
