@@ -291,15 +291,45 @@
 
       } catch (error) {
         console.error('Gemini Error:', error);
+        const msg = String(error.message || error).toLowerCase();
+
+        // If model not found, call ListModels to show available models and guidance
+        if (msg.includes('404') || msg.includes('not found') || msg.includes('models/')) {
+          try {
+            const models = await listAvailableModels();
+            const names = (models && models.length) ? models.map(m => m.name).slice(0,8) : [];
+            document.getElementById('ai-advice').innerHTML = `
+              <div class="text-danger">
+                <strong>সমস্যা:</strong> মডেল পাওয়া যায়নি (HTTP 404)।<br>
+                <strong>কারণ:</strong> আপনার API কী-তে মডেল অ্যাক্সেস নেই অথবা মডেলটি এই API সংস্করণে সমর্থিত নয়।<br>
+                <strong>উপলব্ধ মডেল:</strong> ${names.length ? names.join(', ') : 'তথ্য পাওয়া যায়নি'}<br>
+                <strong>সমাধান:</strong> কনসোলে গিয়ে মডেল সক্রিয় করুন বা একটি উপলব্ধ মডেল নাম ব্যবহার করুন।<br>
+                <strong>হেল্পলাইন:</strong> ১৬৭৬৭
+              </div>
+            `;
+            return;
+          } catch (lmErr) {
+            console.error('ListModels Error:', lmErr);
+            document.getElementById('ai-advice').innerHTML = `
+              <div class="text-danger">
+                <strong>সমস্যা:</strong> ${error.message}<br>
+                <strong>সমাধান:</strong> ৫ মিনিট অপেক্ষা করুন বা API কী চেক করুন।<br>
+                <strong>হেল্পলাইন:</strong> ১৬৭৬৭
+              </div>
+            `;
+            return;
+          }
+        }
+
         document.getElementById('ai-advice').innerHTML = `
-            <div class="text-danger">
-              <strong>Gemini AI কৃষি পরামর্শ</strong><br>
-              <em>ধানে পাতা হলুদ</em><br>
-              <strong>সমস্যা:</strong> উত্তরের স্ট্রাকচার পাওয়া যায়নি।<br>
-              <strong>সমাধান:</strong> ৫ মিনিট অপেক্ষা করুন বা API কী চেক করুন।<br>
-              <strong>হেল্পলাইন:</strong> ১৬৭৬৭ (কৃষি অফিস)
-            </div>
-          `;
+          <div class="text-danger">
+            <strong>Gemini AI কৃষি পরামর্শ</strong><br>
+            <em>ধানে পাতা হলুদ</em><br>
+            <strong>সমস্যা:</strong> উত্তরের স্ট্রাকচার পাওয়া যায়নি।<br>
+            <strong>সমাধান:</strong> ৫ মিনিট অপেক্ষা করুন বা API কী চেক করুন।<br>
+            <strong>হেল্পলাইন:</strong> ১৬৭৬৭ (কৃষি অফিস)
+          </div>
+        `;
       }
     }
 
