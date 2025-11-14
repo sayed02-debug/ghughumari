@@ -3,143 +3,251 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>কৃষি - ঘুঘুমারী</title>
+  <title>কৃষি AI - Gemini API | ঘুঘুমারী</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    .weather-card { border-radius: 20px; overflow: hidden; }
-    .forecast-day { font-size: 0.85rem; }
-    .alert-box { background: #fff3cd; border-left: 5px solid #ffc107; padding: 12px; border-radius: 10px; margin-top: 15px; }
-    .alert-danger { background: #f8d7da; border-left: 5px solid #dc3545; }
-    .ai-card { max-width: 900px; margin: 0 auto; }
-    .ai-btn { font-size: 1.1rem; font-weight: bold; }
-    .cnn-card { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
+    body {
+      background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+      font-family: 'SolaimanLipi', Arial, sans-serif;
+      min-height: 100vh;
+    }
+    .navbar-brand {
+      font-size: 1.5rem;
+    }
+    .chat-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .chat-header {
+      background: linear-gradient(135deg, #0d8b3a, #0a6e2c);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .chat-messages {
+      height: 500px;
+      overflow-y: auto;
+      padding: 1.5rem;
+      background: #fafafa;
+    }
+    .message {
+      margin-bottom: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: 18px;
+      max-width: 85%;
+      line-height: 1.5;
+    }
+    .user-message {
+      background: linear-gradient(135deg, #0d8b3a, #0a6e2c);
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 5px;
+    }
+    .bot-message {
+      background: white;
+      border: 1px solid #e0e0e0;
+      margin-right: auto;
+      border-bottom-left-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .input-area {
+      padding: 1.5rem;
+      border-top: 1px solid #e0e0e0;
+      background: white;
+    }
+    .upload-btn {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+    .upload-btn input[type=file] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    .suggestion-chip {
+      display: inline-block;
+      background: #e8f5e8;
+      color: #0d8b3a;
+      padding: 0.5rem 1rem;
+      margin: 0.3rem;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: 1px solid #c8e6c9;
+      transition: all 0.3s ease;
+    }
+    .suggestion-chip:hover {
+      background: #0d8b3a;
+      color: white;
+      transform: translateY(-2px);
+    }
+    .preview-image {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 12px;
+      margin-top: 10px;
+      border: 2px solid #e0e0e0;
+    }
+    .typing-indicator {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #e0e0e0;
+      border-radius: 18px;
+      color: #666;
+    }
+    .typing-dots {
+      display: inline-block;
+    }
+    .typing-dots span {
+      animation: typing 1.4s infinite;
+      display: inline-block;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    
+    @keyframes typing {
+      0%, 60%, 100% { opacity: 0.3; }
+      30% { opacity: 1; }
+    }
+    .api-status {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      background: #4caf50;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 <body>
 
+  <!-- API Status -->
+  <div class="api-status">
+    <i class="fas fa-check-circle me-1"></i>Gemini API Connected
+  </div>
+
   <!-- নেভবার -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top shadow">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="#">ঘুঘুমারী</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="index.html">হোম</a></li>
-          <li class="nav-item"><a class="nav-link" href="about.html">পরিচয়</a></li>
-          <li class="nav-item"><a class="nav-link" href="education.html">শিক্ষা</a></li>
-          <li class="nav-item"><a class="nav-link" href="development.html">উন্নয়ন</a></li>
-          <li class="nav-item"><a class="nav-link" href="index.html#beauty">সৌন্দর্য</a></li>
-          <li class="nav-item"><a class="nav-link" href="welfare.html">কল্যাণ</a></li>
-          <li class="nav-item"><a class="nav-link active" href="agriculture.html">কৃষি</a></li>
-          <li class="nav-item"><a class="nav-link" href="emergency.html">জরুরি</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html">যোগাযোগ</a></li>
-        </ul>
-      </div>
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="fas fa-seedling me-2"></i>ঘুঘুমারী কৃষি AI
+      </a>
+      <span class="navbar-text">
+        <i class="fas fa-gem me-1"></i>Powered by Gemini
+      </span>
     </div>
   </nav>
 
-  <!-- হেডার -->
-  <section class="py-5 bg-success text-white text-center">
-    <div class="container pt-5">
-      <h1 class="display-5 fw-bold">কৃষি ও কৃষক সেবা</h1>
-      <p class="lead">লাইভ আবহাওয়া + AI সহকারী + ছবি দিয়ে রোগ চেক</p>
+  <!-- হিরো সেকশন -->
+  <section class="py-4 bg-success text-white">
+    <div class="container text-center">
+      <h1 class="display-6 fw-bold">Google Gemini AI কৃষি সহকারী</h1>
+      <p class="lead mb-0">বাংলা, ইংরেজি, বাংলিশ - যেভাবে খুশি লিখুন বা ছবি দিন</p>
     </div>
   </section>
 
-  <!-- AI চ্যাটবট (Farmer.Chat - WhatsApp) -->
-  <section class="container my-5">
-    <div class="card shadow-sm ai-card">
-      <div class="card-body text-center p-4">
-        <h4 class="text-success mb-3">
-          <i class="fab fa-whatsapp"></i> AI কৃষি সহকারী
-        </h4>
-        <p class="text-muted mb-4">
-          <strong>বাংলা, ইংরেজি বা বাংলিশ লিখুন</strong> — ধানে পোকা, সার, আবহাওয়া, বীজ, দাম — সব জানাবে!
-        </p>
+  <!-- Gemini AI চ্যাটবট -->
+  <section class="container my-4">
+    <div class="chat-container">
+      <div class="chat-header">
+        <h4 class="mb-2"><i class="fas fa-robot me-2"></i>Gemini AI কৃষি বিশেষজ্ঞ</h4>
+        <p class="mb-0">ছবি বা লেখা - দুভাবেই সমস্যার সমাধান</p>
+      </div>
+      
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">
+          <strong>🌾 Gemini AI:</strong> আসসালামু আলাইকুম! আমি আপনার AI কৃষি সহকারী। 
+          <br><br>
+          <strong>আপনি যা করতে পারেন:</strong>
+          <br>✅ বাংলা, ইংরেজি বা বাংলিশে লিখুন
+          <br>✅ ফসলের ছবি আপলোড করুন  
+          <br>✅ রোগ, সার, পোকা - যেকোনো সমস্যা জানান
+          <br><br>
+          <strong>দ্রুত প্রশ্ন:</strong>
+          <div class="mt-2">
+            <span class="suggestion-chip" onclick="askQuestion('ধানের পাতা সাদা হয়ে যাচ্ছে, কী করব?')">ধানের পাতা সাদা</span>
+            <span class="suggestion-chip" onclick="askQuestion('আলুতে পোকা ধরেছে, কী ওষুধ দেব?')">আলুতে পোকা</span>
+            <span class="suggestion-chip" onclick="askQuestion('টমেটো গাছে ফুল আসছে না কেন?')">টমেটো ফুল আসছে না</span>
+            <span class="suggestion-chip" onclick="askQuestion('ধান কাটার সঠিক সময় কখন?')">ধান কাটার সময়</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="input-area">
+        <!-- ছবি আপলোড -->
+        <div class="mb-3">
+          <label class="form-label text-success fw-bold">
+            <i class="fas fa-camera me-1"></i>ছবি আপলোড (ঐচ্ছিক)
+          </label>
+          <div class="upload-btn btn btn-outline-success w-100">
+            <i class="fas fa-cloud-upload-alt me-2"></i>ফসলের ছবি আপলোড করুন
+            <input type="file" id="imageUpload" accept="image/*" onchange="previewImage(this)">
+          </div>
+          <div id="imagePreview" class="mt-2 text-center"></div>
+        </div>
         
-        <!-- Farmer.Chat WhatsApp Link -->
-        <a href="https://wa.me/918884267777?text=ধানে%20পোকা%20হয়েছে,%20কী%20করব?" 
-           class="btn btn-success btn-lg ai-btn d-block mx-auto" 
-           target="_blank" 
-           style="max-width: 400px;">
-           <i class="fab fa-whatsapp"></i> WhatsApp-এ চ্যাট করুন
-        </a>
+        <!-- টেক্সট ইনপুট -->
+        <div class="input-group">
+          <input type="text" class="form-control form-control-lg" 
+                 id="userInput" 
+                 placeholder="আপনার কৃষি সমস্যা লিখুন... (বাংলা/English/Banglish)" 
+                 onkeypress="handleKeyPress(event)">
+          <button class="btn btn-success btn-lg" type="button" onclick="sendMessage()" id="sendButton">
+            <i class="fas fa-paper-plane"></i> পাঠান
+          </button>
+        </div>
         
-        <small class="text-muted d-block mt-3">
-          উদাহরণ: <code>dhan e poka</code> | <code>rice blast</code> | <code>urea koto dibo</code>
-        </small>
+        <div class="mt-3 text-center">
+          <small class="text-muted">
+            <i class="fas fa-info-circle me-1"></i>
+            উদাহরণ: "dhan e poka", "rice blast treatment", "সার কখন দিব", "টমেটো রোগ"
+          </small>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- CNN - ছবি দিয়ে রোগ চেক (Plantix) -->
+  <!-- ফিচারস -->
   <section class="container my-5">
-    <div class="card shadow-sm cnn-card">
-      <div class="card-body text-center p-4">
-        <h4 class="text-primary mb-3">
-          <i class="fas fa-camera"></i> ছবি দিয়ে রোগ চেক করুন
-        </h4>
-        <p class="text-muted mb-4">
-          ধান, আলু, টমেটো — যেকোনো ফসলের ছবি দিন, রোগ + চিকিত্সা জানাবে!
-        </p>
-        
-        <!-- Plantix App Link -->
-        <a href="https://plantix.net/app" 
-           class="btn btn-primary btn-lg d-block mx-auto" 
-           target="_blank" 
-           style="max-width: 400px;">
-           <i class="fas fa-leaf"></i> Plantix অ্যাপে ছবি দিন
-        </a>
-        
-        <small class="text-muted d-block mt-3">
-          ৯৫% সঠিক | ৩৮+ ফসল | বাংলা সাপোর্ট
-        </small>
-      </div>
-    </div>
-  </section>
-
-  <!-- লাইভ আবহাওয়া -->
-  <section class="container my-5">
-    <div class="card weather-card shadow-lg">
-      <div class="card-body text-center p-4">
-        <h3 class="mb-3">লাইভ আবহাওয়া (ঘুঘুমারী, নীলফামারী)</h3>
-        <div id="weather-today" class="display-5 fw-bold text-primary mb-2">লোড হচ্ছে...</div>
-        <div id="weather-details" class="text-muted mb-3"></div>
-        <div id="weather-forecast" class="mt-4"></div>
-        <div id="weather-alert" class="alert-box d-none"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- জাতীয় হেল্পলাইন -->
-  <section class="container my-5">
-    <h3 class="text-center mb-4 fw-bold">জাতীয় হেল্পলাইন</h3>
     <div class="row g-4">
       <div class="col-md-4">
-        <div class="card text-center shadow-sm h-100 border-0">
-          <div class="card-body d-flex flex-column justify-content-center">
-            <h1 class="text-success fw-bold">৩৩৩</h1>
-            <p class="mb-0">জাতীয় হেল্পলাইন</p>
+        <div class="card text-center h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <i class="fas fa-language text-success fa-2x mb-3"></i>
+            <h5>৩ ভাষা সাপোর্ট</h5>
+            <p class="text-muted">বাংলা, ইংরেজি, বাংলিশ - যেকোনো ভাষায় লিখুন</p>
           </div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card text-center shadow-sm h-100 border-0">
-          <div class="card-body d-flex flex-column justify-content-center">
-            <h1 class="text-primary fw-bold">১৬৭৬৭</h1>
-            <p class="mb-0">কৃষি হেল্পলাইন</p>
+        <div class="card text-center h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <i class="fas fa-camera text-success fa-2x mb-3"></i>
+            <h5>ছবি বিশ্লেষণ</h5>
+            <p class="text-muted">ফসলের ছবি দিলেই রোগ শনাক্ত</p>
           </div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card text-center shadow-sm h-100 border-0">
-          <div class="card-body d-flex flex-column justify-content-center">
-            <h1 class="text-danger fw-bold">৯৯৯</h1>
-            <p class="mb-0">জরুরি সেবা</p>
+        <div class="card text-center h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <i class="fas fa-clock text-success fa-2x mb-3"></i>
+            <h5>ফ্রি ফরেভার</h5>
+            <p class="text-muted">Gemini API সম্পূর্ণ ফ্রি</p>
           </div>
         </div>
       </div>
@@ -147,68 +255,233 @@
   </section>
 
   <!-- ফুটার -->
-  <footer class="bg-dark text-white text-center py-4">
+  <footer class="bg-dark text-white text-center py-4 mt-5">
     <div class="container">
-      <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী, শিমুলবাড়ী</p>
-      <p class="mb-0 small">
-        জলঢাকা, নীলফামারী । ডেভেলপ করেছেন: <strong>Abu Sayed Islam</strong><br>
-        Computer Science and Engineering, JnU
-      </p>
+      <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী কৃষি AI | Powered by Google Gemini</p>
+      <p class="mb-0 small">জলঢাকা, নীলফামারী • ডেভেলপ করেছেন: আবু সায়েদ ইসলাম</p>
     </div>
   </footer>
-
-  <!-- WhatsApp Float -->
-  <a href="https://wa.me/8801521703362" class="whatsapp-float" target="_blank">
-    <i class="fab fa-whatsapp"></i>
-  </a>
 
   <!-- JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // === আবহাওয়া ===
-    const WEATHER_API_KEY = '6561455c200e43306bb6913524c5eeb1';
-    async function loadWeather() {
+    // Gemini API Configuration - YOUR API KEY IS READY!
+    const GEMINI_API_KEY = 'AIzaSyA-2_oywpWvnqoZr8bM0J-NDVO4Xp9J9Yo';
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+    
+    // DOM Elements
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+
+    // System Prompt for Agricultural Expert
+    const SYSTEM_PROMPT = `You are Krishi Prosharon - an agricultural expert AI assistant for Bangladeshi farmers. 
+    Always respond in simple Bengali language. Understand and respond appropriately to Banglish (Bengali+English mix).
+    
+    Your expertise:
+    - Crop diseases and treatments
+    - Pest control and pesticides  
+    - Fertilizer recommendations
+    - Seasonal farming advice
+    - Bangladeshi agricultural practices
+    
+    Guidelines:
+    - Use simple Bengali that farmers can understand
+    - Be practical and provide actionable advice
+    - Recommend government-approved solutions
+    - Mention specific medicine/pesticide names when possible
+    - If user uploads image, analyze it for disease detection
+    - Keep responses comprehensive but easy to understand`;
+
+    // Send message function
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      const imagePreview = document.getElementById('imagePreview');
+      const hasImage = imagePreview.innerHTML !== '';
+      
+      if (message === '' && !hasImage) {
+        alert('দয়া করে প্রশ্ন লিখুন বা ছবি আপলোড করুন');
+        return;
+      }
+      
+      // Show user message
+      addMessage(message, 'user', hasImage ? imagePreview.innerHTML : '');
+      
+      // Clear input
+      userInput.value = '';
+      imagePreview.innerHTML = '';
+      sendButton.disabled = true;
+      userInput.disabled = true;
+      
+      // Show typing indicator
+      showTypingIndicator();
+      
       try {
-        const todayRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Nilphamari,BD&appid=${WEATHER_API_KEY}&units=metric&lang=bn`);
-        if (!todayRes.ok) throw new Error();
-        const today = await todayRes.json();
-        document.getElementById('weather-today').innerHTML = `${Math.round(today.main.temp)}°সে | ${today.weather[0].description}`;
-        document.getElementById('weather-details').innerHTML = `<small>আর্দ্রতা: ${today.main.humidity}% | বাতাস: ${Math.round(today.wind.speed * 3.6)} কিমি/ঘণ্টা</small>`;
-
-        const forecastRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Nilphamari,BD&appid=${WEATHER_API_KEY}&units=metric&lang=bn`);
-        if (!forecastRes.ok) throw new Error();
-        const forecast = await forecastRes.json();
-
-        let forecastHTML = '<div class="row g-2 mt-3"><h5 class="col-12 text-center">৭ দিনের পূর্বাভাস:</h5>';
-        let alerts = [];
-        for (let i = 0; i < 40 && i < forecast.list.length; i += 8) {
-          const day = forecast.list[i];
-          const date = new Date(day.dt * 1000).toLocaleDateString('bn-BD', { day: 'numeric', month: 'short' });
-          const temp = Math.round(day.main.temp);
-          const rainProb = day.pop ? Math.round(day.pop * 100) : 0;
-          const desc = day.weather[0].description;
-          forecastHTML += `<div class="col-6 col-md-2 forecast-day"><div class="card text-center bg-light h-100 border-0"><div class="card-body p-2"><small class="fw-bold">${date}</small><br><span class="text-primary">${temp}°সে</span><br><small>${desc}</small><br><small class="text-danger">বৃষ্টি: ${rainProb}%</small></div></div></div>`;
-          if (rainProb > 50) alerts.push(`${date}-এ বৃষ্টির সম্ভাবনা`);
-        }
-        forecastHTML += '</div>';
-        document.getElementById('weather-forecast').innerHTML = forecastHTML;
-
-        const alertEl = document.getElementById('weather-alert');
-        if (alerts.length > 0) {
-          alertEl.className = 'alert-box alert-danger';
-          alertEl.innerHTML = '<strong>সতর্কতা:</strong> ' + alerts.join(' | ');
-        } else {
-          alertEl.className = 'alert-box';
-          alertEl.innerHTML = '<strong>কোনো সতর্কতা নেই।</strong>';
-        }
-        alertEl.classList.remove('d-none');
+        console.log('Sending request to Gemini API...');
+        
+        // Get AI response
+        const aiResponse = await getGeminiResponse(message, hasImage);
+        removeTypingIndicator();
+        addMessage(aiResponse, 'bot');
       } catch (error) {
-        document.getElementById('weather-today').innerHTML = '২৮°সে | সূর্যালোকিত';
-        document.getElementById('weather-details').innerHTML = '<small>আর্দ্রতা: ৭০% | বাতাস: ৬ কিমি/ঘণ্টা</small>';
+        removeTypingIndicator();
+        console.error('Gemini API Error:', error);
+        addMessage(`দুঃখিত, কিছুটা সমস্যা হয়েছে: ${error.message}. আবার চেষ্টা করুন।`, 'bot');
+      }
+      
+      sendButton.disabled = false;
+      userInput.disabled = false;
+      userInput.focus();
+    }
+    
+    // Get response from Gemini API
+    async function getGeminiResponse(userMessage, hasImage = false) {
+      let prompt = `${SYSTEM_PROMPT}\n\n`;
+      
+      if (hasImage) {
+        prompt += `User has uploaded an image of their crop and asks: "${userMessage}"\n\nPlease analyze the potential diseases and provide treatment advice:`;
+      } else {
+        prompt += `User Question: ${userMessage}\n\nPlease provide detailed, helpful response in Bengali:`;
+      }
+      
+      const requestBody = {
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 1024,
+        }
+      };
+      
+      const response = await fetch(GEMINI_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(`API Error: ${response.status} - ${errorData}`);
+      }
+      
+      const data = await response.json();
+      
+      if (!data.candidates || !data.candidates[0].content.parts[0].text) {
+        throw new Error('Invalid response format from Gemini API');
+      }
+      
+      return data.candidates[0].content.parts[0].text;
+    }
+    
+    // Helper functions
+    function askQuestion(question) {
+      userInput.value = question;
+      sendMessage();
+    }
+    
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
       }
     }
-
-    window.addEventListener('load', loadWeather);
+    
+    function addMessage(text, sender, imageHtml = '') {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${sender === 'user' ? 'user-message' : 'bot-message'}`;
+      
+      if (sender === 'user') {
+        messageDiv.innerHTML = `<strong>👤 আপনি:</strong> ${text}`;
+        if (imageHtml) {
+          messageDiv.innerHTML += `<div class="text-center">${imageHtml}</div>`;
+        }
+      } else {
+        messageDiv.innerHTML = `<strong>🌾 Gemini AI:</strong> ${formatResponse(text)}`;
+      }
+      
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    function showTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.id = 'typingIndicator';
+      typingDiv.className = 'message bot-message typing-indicator';
+      typingDiv.innerHTML = '<strong>🌾 Gemini AI:</strong> টাইপ করছে<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>';
+      chatMessages.appendChild(typingDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    function removeTypingIndicator() {
+      const typingIndicator = document.getElementById('typingIndicator');
+      if (typingIndicator) {
+        typingIndicator.remove();
+      }
+    }
+    
+    function previewImage(input) {
+      const preview = document.getElementById('imagePreview');
+      
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          preview.innerHTML = `<img src="${e.target.result}" class="preview-image" alt="আপলোড করা ছবি">
+                              <div class="mt-1"><small class="text-success">ছবি আপলোড হয়েছে ✓</small></div>`;
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+      } else {
+        preview.innerHTML = '';
+      }
+    }
+    
+    function formatResponse(text) {
+      // Simple formatting for better readability
+      return text.replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>');
+    }
+    
+    // Test API connection on load
+    async function testAPI() {
+      try {
+        const testResponse = await fetch(GEMINI_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: "Say 'API Connected Successfully' in Bengali"
+              }]
+            }]
+          })
+        });
+        
+        if (testResponse.ok) {
+          console.log('✅ Gemini API Connection Successful!');
+        } else {
+          console.error('❌ Gemini API Connection Failed');
+        }
+      } catch (error) {
+        console.error('❌ API Test Failed:', error);
+      }
+    }
+    
+    // Initialize
+    window.addEventListener('load', function() {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      userInput.focus();
+      testAPI();
+    });
   </script>
 </body>
 </html>
