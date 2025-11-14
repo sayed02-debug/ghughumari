@@ -163,7 +163,6 @@
   <script>
     // === API Keys ===
     const WEATHER_API_KEY = '6561455c200e43306bb6913524c5eeb1';
-    const GEMINI_API_KEY = 'AIzaSyAIYPVE_9yp8ydhVJRhi1AryoJIJCSjYtg'; // তোমার নতুন কী
 
     // === লাইভ আবহাওয়া ===
     async function loadWeather() {
@@ -242,53 +241,8 @@
 
       try {
         const prompt = `বাংলাদেশের গ্রামে কৃষি সমস্যা: ${query}। BRRI-ভিত্তিক, সহজ, ব্যবহারিক সমাধান বাংলায় দাও। ৩-৪ লাইনে। কৃষক যেন সহজে বুঝতে পারে।`;
-
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            safetySettings: [
-              { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
-              { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
-              { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
-              { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" }
-            ],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 150 }
-          })
-        });
-
-        if (!response.ok) {
-          const errText = await response.text();
-          throw new Error(`HTTP ${response.status}: ${errText}`);
-        }
-
-        const data = await response.json();
-
-        // ফিক্স: candidates চেক
-        if (!data.candidates || !Array.isArray(data.candidates) || data.candidates.length === 0) {
-          throw new Error('কোনো উত্তর পাওয়া যায়নি। API কী বা মডেল চেক করুন।');
-        }
-
-        const candidate = data.candidates[0];
-
-        // ফিক্স: content এবং parts চেক
-        if (!candidate.content || !candidate.content.parts || candidate.content.parts.length === 0) {
-          throw new Error('উত্তরের টেক্সট পাওয়া যায়নি। সেফটি ব্লক হতে পারে।');
-        }
-
-        const textPart = candidate.content.parts.find(part => part.text);
-        if (!textPart || !textPart.text) {
-          throw new Error('টেক্সট ফিল্ড খালি।');
-        }
-
-        const answer = textPart.text.trim();
-        if (!answer) {
-          throw new Error('উত্তর খালি।');
-        }
-
+        const answer = await generateWithFallback(PREFERRED_MODEL, prompt, { temperature: 0.7, maxOutputTokens: 150 });
         document.getElementById('ai-advice').innerHTML = `<strong>Gemini AI পরামর্শ:</strong><br>${answer}`;
-
       } catch (error) {
         console.error('Gemini Error:', error);
         const msg = String(error.message || error).toLowerCase();
@@ -338,8 +292,8 @@
 
     // === Gemini Chatbot ===
     const chatMessages = []; // {role: 'user'|'assistant', text: ''}
-    const PREFERRED_MODEL = 'models/gemini-2.5-pro'; // use a model known to be available from ListModels
-    const BASE_GEN_URL = 'https://generativelanguage.googleapis.com/v1/models';
+    const PREFERRED_MODEL = 'models/gemini-2.5-pro'; // server will use this by default if provided
+    const PROXY_BASE = ''; // same origin, e.g. '' or 'http://localhost:3000' if running server elsewhere
 
     function renderChat() {
       const win = document.getElementById('chat-window');
@@ -423,98 +377,47 @@
       }
     }
 
-    // Fetch list of available models from the API to help diagnose 404s
+    // Fetch list of available models from the server proxy
     async function listAvailableModels() {
-      const url = `https://generativelanguage.googleapis.com/v1/models?key=${GEMINI_API_KEY}`;
+      const url = `${PROXY_BASE}/api/models`;
       const res = await fetch(url, { method: 'GET' });
       if (!res.ok) {
         const body = await res.text();
         throw new Error(`ListModels failed: HTTP ${res.status}: ${body}`);
       }
       const data = await res.json();
-      // Response commonly contains `models` array
       if (data.models && Array.isArray(data.models)) return data.models;
-      // fallback: return raw object wrapped
       return [];
     }
 
-    // Try generateContent first; if API responds that generateContent isn't supported, try generateMessage
+    // Call server proxy to generate text (server handles model/method fallback)
     async function generateWithFallback(modelName, promptText, opts = {}) {
-      const base = BASE_GEN_URL;
-      const key = GEMINI_API_KEY;
-
-      // Helper to extract text robustly from different response shapes
-      function extractText(data) {
-        if (!data) return null;
-        if (data.outputText) return String(data.outputText).trim();
-        if (data.candidates && Array.isArray(data.candidates) && data.candidates.length) {
-          const c = data.candidates[0];
-          // candidate.content.parts[].text
-          if (c.content && c.content.parts && Array.isArray(c.content.parts)) {
-            const p = c.content.parts.find(x => x.text);
-            if (p && p.text) return String(p.text).trim();
-          }
-          // candidate.content[0].text
-          if (Array.isArray(c.content) && c.content.length && c.content[0].text) return String(c.content[0].text).trim();
-          // candidate.outputText
-          if (c.outputText) return String(c.outputText).trim();
-          // candidate.message.content
-          if (c.message && Array.isArray(c.message.content) && c.message.content[0] && c.message.content[0].text) return String(c.message.content[0].text).trim();
-        }
-        // fallback: check top-level fields
-        if (data.text) return String(data.text).trim();
-        return null;
+      const url = `${PROXY_BASE}/api/generate`;
+      const body = { model: modelName, prompt: promptText, temperature: opts.temperature || 0.3, maxOutputTokens: opts.maxOutputTokens || 300 };
+      const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`Proxy generate failed: HTTP ${res.status}: ${t}`);
       }
+      const data = await res.json();
 
-      // 1) Try generateContent (older method used by some models)
-      try {
-        const url = `${base}/${modelName}:generateContent?key=${key}`;
-        const body = {
-          contents: [{ parts: [{ text: promptText }] }],
-          generationConfig: { temperature: opts.temperature || 0.3, maxOutputTokens: opts.maxOutputTokens || 300 }
-        };
-        const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-        if (res.ok) {
-          const data = await res.json();
-          const txt = extractText(data);
-          if (txt) return txt;
-        } else {
-          const text = await res.text();
-          // If not supported for generateContent, fall through to try generateMessage
-          if (text.toLowerCase().includes('not supported for generatecontent') || res.status === 404) {
-            // continue to next
-          } else {
-            throw new Error(`HTTP ${res.status}: ${text}`);
-          }
+      // Robust extraction similar to server-side shapes
+      if (!data) throw new Error('Empty response from proxy');
+      if (data.outputText) return String(data.outputText).trim();
+      if (data.candidates && Array.isArray(data.candidates) && data.candidates.length) {
+        const c = data.candidates[0];
+        if (c.content && c.content.parts && Array.isArray(c.content.parts)) {
+          const p = c.content.parts.find(x => x.text);
+          if (p && p.text) return String(p.text).trim();
         }
-      } catch (err) {
-        // If the error clearly indicates generateContent isn't supported, we'll try generateMessage below.
-        const em = String(err.message || err).toLowerCase();
-        if (!(em.includes('not supported for generatecontent') || em.includes('404') || em.includes('not found'))) throw err;
+        if (Array.isArray(c.content) && c.content.length && c.content[0].text) return String(c.content[0].text).trim();
+        if (c.outputText) return String(c.outputText).trim();
+        if (c.message && Array.isArray(c.message.content) && c.message.content[0] && c.message.content[0].text) return String(c.message.content[0].text).trim();
       }
-
-      // 2) Try generateMessage (chat-style)
-      try {
-        const url2 = `${base}/${modelName}:generateMessage?key=${key}`;
-        const body2 = {
-          messages: [
-            { author: 'user', content: [{ type: 'text', text: promptText }] }
-          ],
-          temperature: opts.temperature || 0.3,
-          maxOutputTokens: opts.maxOutputTokens || 300
-        };
-        const res2 = await fetch(url2, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body2) });
-        if (!res2.ok) {
-          const b = await res2.text();
-          throw new Error(`generateMessage failed: HTTP ${res2.status}: ${b}`);
-        }
-        const data2 = await res2.json();
-        const txt2 = extractText(data2);
-        if (txt2) return txt2;
-        throw new Error('উত্তর নেই (generateMessage)');
-      } catch (err2) {
-        throw err2;
-      }
+      // Chat-style message in response.message
+      if (data.message && Array.isArray(data.message.content) && data.message.content[0] && data.message.content[0].text) return String(data.message.content[0].text).trim();
+      // fallback: convert whole response to string
+      return JSON.stringify(data);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
