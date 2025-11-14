@@ -131,13 +131,16 @@
       z-index: 1000;
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
+    .error-status {
+      background: #f44336;
+    }
   </style>
 </head>
 <body>
 
   <!-- API Status -->
-  <div class="api-status">
-    <i class="fas fa-check-circle me-1"></i>Gemini API Connected
+  <div class="api-status" id="apiStatus">
+    <i class="fas fa-sync-alt me-1"></i>Checking API...
   </div>
 
   <!-- নেভবার -->
@@ -265,14 +268,29 @@
   <!-- JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Gemini API Configuration - YOUR API KEY IS READY!
+    // Gemini API Configuration - FIXED MODEL NAME
     const GEMINI_API_KEY = 'AIzaSyA-2_oywpWvnqoZr8bM0J-NDVO4Xp9J9Yo';
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+    
+    // Available Gemini Models - try different ones
+    const MODELS = [
+      'gemini-1.5-flash-latest',
+      'gemini-1.5-pro-latest', 
+      'gemini-pro',
+      'gemini-1.0-pro'
+    ];
+    
+    let currentModelIndex = 0;
+    
+    function getCurrentAPIUrl() {
+      const model = MODELS[currentModelIndex];
+      return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+    }
     
     // DOM Elements
     const chatMessages = document.getElementById('chatMessages');
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
+    const apiStatus = document.getElementById('apiStatus');
 
     // System Prompt for Agricultural Expert
     const SYSTEM_PROMPT = `You are Krishi Prosharon - an agricultural expert AI assistant for Bangladeshi farmers. 
@@ -292,6 +310,17 @@
     - Mention specific medicine/pesticide names when possible
     - If user uploads image, analyze it for disease detection
     - Keep responses comprehensive but easy to understand`;
+
+    // Update API status
+    function updateApiStatus(status, isError = false) {
+      if (isError) {
+        apiStatus.innerHTML = `<i class="fas fa-exclamation-triangle me-1"></i>${status}`;
+        apiStatus.className = 'api-status error-status';
+      } else {
+        apiStatus.innerHTML = `<i class="fas fa-check-circle me-1"></i>${status}`;
+        apiStatus.className = 'api-status';
+      }
+    }
 
     // Send message function
     async function sendMessage() {
@@ -323,10 +352,21 @@
         const aiResponse = await getGeminiResponse(message, hasImage);
         removeTypingIndicator();
         addMessage(aiResponse, 'bot');
+        updateApiStatus(`Connected (${MODELS[currentModelIndex]})`);
       } catch (error) {
         removeTypingIndicator();
         console.error('Gemini API Error:', error);
-        addMessage(`দুঃখিত, কিছুটা সমস্যা হয়েছে: ${error.message}. আবার চেষ্টা করুন।`, 'bot');
+        
+        // Try next model if available
+        if (currentModelIndex < MODELS.length - 1) {
+          currentModelIndex++;
+          updateApiStatus(`Trying model: ${MODELS[currentModelIndex]}`, true);
+          setTimeout(() => sendMessage(), 1000);
+          return;
+        }
+        
+        addMessage(`দুঃখিত, API তে সমস্যা হচ্ছে। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।`, 'bot');
+        updateApiStatus('API Error - Please refresh', true);
       }
       
       sendButton.disabled = false;
@@ -358,7 +398,8 @@
         }
       };
       
-      const response = await fetch(GEMINI_API_URL, {
+      const apiUrl = getCurrentAPIUrl();
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -367,13 +408,13 @@
       });
       
       if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(`API Error: ${response.status} - ${errorData}`);
+        const errorData = await response.json();
+        throw new Error(`API Error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
       }
       
       const data = await response.json();
       
-      if (!data.candidates || !data.candidates[0].content.parts[0].text) {
+      if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts[0].text) {
         throw new Error('Invalid response format from Gemini API');
       }
       
@@ -452,7 +493,9 @@
     // Test API connection on load
     async function testAPI() {
       try {
-        const testResponse = await fetch(GEMINI_API_URL, {
+        updateApiStatus('Testing API Connection...');
+        
+        const testResponse = await fetch(getCurrentAPIUrl(), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -462,17 +505,44 @@
               parts: [{
                 text: "Say 'API Connected Successfully' in Bengali"
               }]
-            }]
+            }],
+            generationConfig: {
+              maxOutputTokens: 50
+            }
           })
         });
         
         if (testResponse.ok) {
+          const data = await testResponse.json();
+          updateApiStatus(`Connected (${MODELS[currentModelIndex]})`);
           console.log('✅ Gemini API Connection Successful!');
         } else {
-          console.error('❌ Gemini API Connection Failed');
+          throw new Error(`HTTP ${testResponse.status}`);
         }
       } catch (error) {
         console.error('❌ API Test Failed:', error);
+        updateApiStatus('Testing other models...', true);
+        
+        // Try other models
+        for (let i = 1; i < MODELS.length; i++) {
+          currentModelIndex = i;
+          try {
+            const testUrl = getCurrentAPIUrl();
+            const retryResponse = await fetch(testUrl, {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({contents: [{parts: [{text: "Test"}]}]})
+            });
+            
+            if (retryResponse.ok) {
+              updateApiStatus(`Connected (${MODELS[currentModelIndex]})`);
+              console.log(`✅ Connected with model: ${MODELS[currentModelIndex]}`);
+              break;
+            }
+          } catch (e) {
+            console.log(`❌ Model ${MODELS[currentModelIndex]} failed`);
+          }
+        }
       }
     }
     
