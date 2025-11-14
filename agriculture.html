@@ -10,17 +10,8 @@
   <style>
     .weather-card { border-radius: 20px; overflow: hidden; }
     .forecast-day { font-size: 0.85rem; }
-    .alert-box { 
-      background: #fff3cd; 
-      border-left: 5px solid #ffc107; 
-      padding: 12px; 
-      border-radius: 10px; 
-      margin-top: 15px;
-    }
-    .alert-danger { 
-      background: #f8d7da; 
-      border-left: 5px solid #dc3545; 
-    }
+    .alert-box { background: #fff3cd; border-left: 5px solid #ffc107; padding: 12px; border-radius: 10px; margin-top: 15px; }
+    .alert-danger { background: #f8d7da; border-left: 5px solid #dc3545; }
     .ai-thinking { color: #6c757d; font-style: italic; }
   </style>
 </head>
@@ -138,7 +129,7 @@
 
   <!-- WhatsApp Float -->
   <a href="https://wa.me/8801521703362" class="whatsapp-float" target="_blank">
-    WhatsApp
+    <i class="fab fa-whatsapp"></i>
   </a>
 
   <!-- JavaScript -->
@@ -248,11 +239,14 @@
 
         const data = await response.json();
 
+        // ফিক্স: candidates চেক
         if (!data.candidates || !Array.isArray(data.candidates) || data.candidates.length === 0) {
           throw new Error('কোনো উত্তর পাওয়া যায়নি। API কী বা মডেল চেক করুন।');
         }
 
         const candidate = data.candidates[0];
+
+        // ফিক্স: content এবং parts চেক
         if (!candidate.content || !candidate.content.parts || candidate.content.parts.length === 0) {
           throw new Error('উত্তরের টেক্সট পাওয়া যায়নি। সেফটি ব্লক হতে পারে।');
         }
@@ -277,7 +271,7 @@
             <strong>সমাধান:</strong> 
             ১. ৫ মিনিট অপেক্ষা করুন।<br>
             ২. <a href="https://aistudio.google.com" target="_blank">AI Studio</a> → নতুন API কী তৈরি করুন।<br>
-            ৩. মডেল: <code>gemini-1.5-flash</code> ব্যবহার করুন।<br>
+            ৩. মডেল: <code>gemini-1.5-flash</code> Enable করুন।<br>
             হেল্পলাইন: ১৬৭৬৭
           </em>
         `;
