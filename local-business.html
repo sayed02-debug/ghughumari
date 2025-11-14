@@ -104,104 +104,6 @@
     </div>
   </section>
 
-  <!-- দিনমজুর সেকশন -->
-  <section class="py-5">
-    <div class="container">
-      <h3 class="text-success mb-4"><i class="fas fa-hammer me-2"></i>দিনমজুর</h3>
-      <div class="row">
-        
-        <!-- দিনমজুর ১ -->
-        <div class="col-lg-6">
-          <div class="service-card worker-card">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <h5 class="text-success mb-0">দিনমজুর</h5>
-              <span class="category-badge">শ্রমিক</span>
-            </div>
-            <div class="mb-3">
-              <strong>আব্দুল করিম</strong><br>
-              <small class="text-muted">ঘুঘুমারী</small>
-            </div>
-            <div class="contact-info">
-              <a href="tel:+8801700000001" class="contact-badge">
-                <i class="fas fa-phone me-1"></i> 017********
-              </a>
-              <a href="https://wa.me/8801700000001" class="contact-badge">
-                <i class="fab fa-whatsapp me-1"></i> WhatsApp
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- দিনমজুর ২ -->
-        <div class="col-lg-6">
-          <div class="service-card worker-card">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <h5 class="text-success mb-0">দিনমজুর</h5>
-              <span class="category-badge">শ্রমিক</span>
-            </div>
-            <div class="mb-3">
-              <strong>রহিম উদ্দিন</strong><br>
-              <small class="text-muted">ঘুঘুমারী</small>
-            </div>
-            <div class="contact-info">
-              <a href="tel:+8801800000001" class="contact-badge">
-                <i class="fas fa-phone me-1"></i> 018********
-              </a>
-              <a href="https://wa.me/8801800000001" class="contact-badge">
-                <i class="fab fa-whatsapp me-1"></i> WhatsApp
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- দিনমজুর ৩ -->
-        <div class="col-lg-6">
-          <div class="service-card worker-card">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <h5 class="text-success mb-0">দিনমজুর</h5>
-              <span class="category-badge">শ্রমিক</span>
-            </div>
-            <div class="mb-3">
-              <strong>সোহরাব হোসেন</strong><br>
-              <small class="text-muted">ঘুঘুমারী</small>
-            </div>
-            <div class="contact-info">
-              <a href="tel:+8801900000001" class="contact-badge">
-                <i class="fas fa-phone me-1"></i> 019********
-              </a>
-              <a href="https://wa.me/8801900000001" class="contact-badge">
-                <i class="fab fa-whatsapp me-1"></i> WhatsApp
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- দিনমজুর ৪ -->
-        <div class="col-lg-6">
-          <div class="service-card worker-card">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <h5 class="text-success mb-0">দিনমজুর</h5>
-              <span class="category-badge">শ্রমিক</span>
-            </div>
-            <div class="mb-3">
-              <strong>মঞ্জুর আলী</strong><br>
-              <small class="text-muted">ঘুঘুমারী</small>
-            </div>
-            <div class="contact-info">
-              <a href="tel:+8801600000001" class="contact-badge">
-                <i class="fas fa-phone me-1"></i> 016********
-              </a>
-              <a href="https://wa.me/8801600000001" class="contact-badge">
-                <i class="fab fa-whatsapp me-1"></i> WhatsApp
-              </a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
   <!-- ফিল্টার সেকশন -->
   <section class="py-4 bg-white">
     <div class="container">
@@ -209,6 +111,7 @@
         <h4 class="text-success mb-3">সেবা খুঁজুন</h4>
         <div class="d-flex flex-wrap justify-content-center">
           <button class="btn filter-btn active" onclick="filterServices('all')">সব সেবা</button>
+          <button class="btn filter-btn" onclick="filterServices('worker')">দিনমজুর</button>
           <button class="btn filter-btn" onclick="filterServices('agriculture')">কৃষি সেবা</button>
           <button class="btn filter-btn" onclick="filterServices('repair')">মেরামত সেবা</button>
           <button class="btn filter-btn" onclick="filterServices('transport')">পরিবহন</button>
@@ -217,6 +120,106 @@
       </div>
     </div>
   </section>
+
+  <!-- দিনমজুর সেকশন -->
+  <div class="service-category worker">
+    <section class="py-5">
+      <div class="container">
+        <h3 class="text-success mb-4"><i class="fas fa-hammer me-2"></i>দিনমজুর</h3>
+        <div class="row">
+          
+          <!-- দিনমজুর ১ -->
+          <div class="col-lg-6">
+            <div class="service-card worker-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">দিনমজুর</h5>
+                <span class="category-badge">শ্রমিক</span>
+              </div>
+              <div class="mb-3">
+                <strong>আব্দুল করিম</strong><br>
+                <small class="text-muted">ঘুঘুমারী</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801700000001" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 017********
+                </a>
+                <a href="https://wa.me/8801700000001" class="contact-badge">
+                  <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- দিনমজুর ২ -->
+          <div class="col-lg-6">
+            <div class="service-card worker-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">দিনমজুর</h5>
+                <span class="category-badge">শ্রমিক</span>
+              </div>
+              <div class="mb-3">
+                <strong>রহিম উদ্দিন</strong><br>
+                <small class="text-muted">ঘুঘুমারী</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801800000001" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 018********
+                </a>
+                <a href="https://wa.me/8801800000001" class="contact-badge">
+                  <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- দিনমজুর ৩ -->
+          <div class="col-lg-6">
+            <div class="service-card worker-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">দিনমজুর</h5>
+                <span class="category-badge">শ্রমিক</span>
+              </div>
+              <div class="mb-3">
+                <strong>সোহরাব হোসেন</strong><br>
+                <small class="text-muted">ঘুঘুমারী</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801900000001" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 019********
+                </a>
+                <a href="https://wa.me/8801900000001" class="contact-badge">
+                  <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- দিনমজুর ৪ -->
+          <div class="col-lg-6">
+            <div class="service-card worker-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">দিনমজুর</h5>
+                <span class="category-badge">শ্রমিক</span>
+              </div>
+              <div class="mb-3">
+                <strong>মঞ্জুর আলী</strong><br>
+                <small class="text-muted">ঘুঘুমারী</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801600000001" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 016********
+                </a>
+                <a href="https://wa.me/8801600000001" class="contact-badge">
+                  <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
 
   <!-- সেবা তালিকা -->
   <section class="py-5">
@@ -458,11 +461,11 @@
                     <label class="form-label">সেবার ধরন</label>
                     <select class="form-select" required>
                       <option value="">সেবা নির্বাচন করুন</option>
+                      <option value="worker">দিনমজুর</option>
                       <option value="agriculture">কৃষি সেবা</option>
                       <option value="repair">মেরামত সেবা</option>
                       <option value="transport">পরিবহন সেবা</option>
                       <option value="daily">দৈনন্দিন সেবা</option>
-                      <option value="worker">দিনমজুর</option>
                     </select>
                   </div>
                   <div class="col-12">
