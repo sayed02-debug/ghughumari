@@ -6,6 +6,8 @@ require('dotenv').config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+// Serve static files from project root so the HTML can be loaded from the same origin as the proxy
+app.use(express.static(__dirname));
 
 const PORT = process.env.PORT || 3000;
 const GEMINI_KEY = process.env.GEMINI_API_KEY;
