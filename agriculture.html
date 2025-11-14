@@ -13,13 +13,12 @@
     .alert-box { background: #fff3cd; border-left: 5px solid #ffc107; padding: 12px; border-radius: 10px; margin-top: 15px; }
     .alert-danger { background: #f8d7da; border-left: 5px solid #dc3545; }
     .ai-thinking { color: #6c757d; font-style: italic; }
-    /* Chat styles */
     .chat-card { max-width: 900px; margin: 0 auto; }
-    .chat-window { height: 320px; overflow-y: auto; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; }
-    .chat-bubble { display: inline-block; padding: 8px 12px; margin: 6px 0; border-radius: 16px; max-width: 80%; }
+    .chat-window { height: 400px; overflow-y: auto; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; }
+    .chat-bubble { display: inline-block; padding: 10px 14px; margin: 6px 0; border-radius: 18px; max-width: 80%; word-wrap: break-word; }
     .chat-user { background: #d1e7dd; align-self: flex-end; margin-left: auto; }
     .chat-ai { background: #e2e3e5; align-self: flex-start; margin-right: auto; }
-    .chat-row { display: flex; }
+    .chat-row { display: flex; margin-bottom: 8px; }
     .chat-controls .form-control { min-width: 0; }
   </style>
 </head>
@@ -52,23 +51,25 @@
   <section class="py-5 bg-success text-white text-center">
     <div class="container pt-5">
       <h1 class="display-5 fw-bold">কৃষি ও কৃষক সেবা</h1>
-      <p class="lead">লাইভ আবহাওয়া + Gemini AI দিয়ে সঠিক সমাধান</p>
+      <p class="lead">লাইভ আবহাওয়া + Gemini AI চ্যাটবট</p>
     </div>
   </section>
 
   <!-- Gemini AI চ্যাটবট -->
-  <section class="container my-4">
+  <section class="container my-5">
     <div class="card shadow-sm chat-card">
       <div class="card-body">
-        <h4 class="mb-3">Gemini AI চ্যাটবট — কৃষি পরামর্শ</h4>
+        <h4 class="mb-3 text-success">
+          <i class="fas fa-robot"></i> Gemini AI — আপনার কৃষি সহকারী
+        </h4>
+        <p class="text-muted small mb-3">ধানে পোকা, পাতা হলুদ, সারের পরিমাণ — যা জানতে চান, লিখুন।</p>
         <div id="chat-window" class="chat-window d-flex flex-column mb-3" aria-live="polite">
-          <div class="text-muted small">চ্যাট শুরু করতে নিচে লিখুন এবং "পাঠান" চাপুন।</div>
+          <div class="text-muted small">চ্যাট শুরু করতে নিচে লিখুন...</div>
         </div>
-
         <div class="input-group chat-controls">
-          <input type="text" id="chat-input" class="form-control" placeholder="আপনার প্রশ্ন লিখুন (উদাহরণ: ধানে কী কী রোগ দেখছেন?)">
+          <input type="text" id="chat-input" class="form-control" placeholder="উদাহরণ: ধানে ছত্রাক হয়েছে, কী করব?">
           <button class="btn btn-success" id="chat-send">পাঠান</button>
-          <button class="btn btn-secondary" id="chat-clear">মুছে ফেলুন</button>
+          <button class="btn btn-outline-secondary" id="chat-clear">মুছে ফেলুন</button>
         </div>
       </div>
     </div>
@@ -83,30 +84,6 @@
         <div id="weather-details" class="text-muted mb-3"></div>
         <div id="weather-forecast" class="mt-4"></div>
         <div id="weather-alert" class="alert-box d-none"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Gemini AI কৃষি পরামর্শ -->
-  <section class="container my-5">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h3 class="mb-3">Gemini AI কৃষি পরামর্শ</h3>
-        <div class="input-group mb-3">
-          <input 
-            type="text" 
-            id="agri-query" 
-            class="form-control" 
-            placeholder="যেমন: ধানে পাতা হলুদ হয়ে যাচ্ছে" 
-            aria-label="কৃষি সমস্যা"
-          >
-          <button class="btn btn-success" onclick="getAgriAdvice()">
-            পরামর্শ পান
-          </button>
-        </div>
-        <div id="ai-advice" class="p-3 bg-light rounded" style="min-height: 120px; border: 1px dashed #ddd;">
-          <em class="text-muted">আপনার সমস্যা লিখুন... Gemini AI সঠিক সমাধান দেবে।</em>
-        </div>
       </div>
     </div>
   </section>
@@ -163,67 +140,46 @@
   <script>
     // === API Keys ===
     const WEATHER_API_KEY = '6561455c200e43306bb6913524c5eeb1';
+    const PROXY_BASE = 'https://ghughumari.onrender.com'; // লাইভ সার্ভার
+    const PREFERRED_MODEL = 'models/gemini-2.5-pro';
 
-    // === লাইভ প্রক্সি সার্ভার (Render.com) ===
-    const PROXY_BASE = 'https://ghughumari.onrender.com'; // লাইভ URL
-
-    // === লাইভ আবহাওয়া ===
+    // === আবহাওয়া ===
     async function loadWeather() {
       try {
         const todayRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Nilphamari,BD&appid=${WEATHER_API_KEY}&units=metric&lang=bn`);
-        if (!todayRes.ok) throw new Error('Weather API Error');
+        if (!todayRes.ok) throw new Error();
         const today = await todayRes.json();
-
         document.getElementById('weather-today').innerHTML = `${Math.round(today.main.temp)}°সে | ${today.weather[0].description}`;
-        document.getElementById('weather-details').innerHTML = `
-          <small>আর্দ্রতা: ${today.main.humidity}% | বাতাস: ${Math.round(today.wind.speed * 3.6)} কিমি/ঘণ্টা</small>
-        `;
+        document.getElementById('weather-details').innerHTML = `<small>আর্দ্রতা: ${today.main.humidity}% | বাতাস: ${Math.round(today.wind.speed * 3.6)} কিমি/ঘণ্টা</small>`;
 
         const forecastRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Nilphamari,BD&appid=${WEATHER_API_KEY}&units=metric&lang=bn`);
-        if (!forecastRes.ok) throw new Error('Forecast API Error');
+        if (!forecastRes.ok) throw new Error();
         const forecast = await forecastRes.json();
 
         let forecastHTML = '<div class="row g-2 mt-3"><h5 class="col-12 text-center">৭ দিনের পূর্বাভাস:</h5>';
         let alerts = [];
-
         for (let i = 0; i < 40 && i < forecast.list.length; i += 8) {
           const day = forecast.list[i];
           const date = new Date(day.dt * 1000).toLocaleDateString('bn-BD', { day: 'numeric', month: 'short' });
           const temp = Math.round(day.main.temp);
           const rainProb = day.pop ? Math.round(day.pop * 100) : 0;
           const desc = day.weather[0].description;
-
-          forecastHTML += `
-            <div class="col-6 col-md-2 forecast-day">
-              <div class="card text-center bg-light h-100 border-0">
-                <div class="card-body p-2">
-                  <small class="fw-bold">${date}</small><br>
-                  <span class="text-primary">${temp}°সে</span><br>
-                  <small>${desc}</small><br>
-                  <small class="text-danger">বৃষ্টি: ${rainProb}%</small>
-                </div>
-              </div>
-            </div>
-          `;
-
-          if (rainProb > 50) alerts.push(`${date}-এ বৃষ্টির সম্ভাবনা বেশি — ফসল রক্ষা করুন।`);
-          if (desc.includes('ঝড়') || desc.includes('storm')) alerts.push(`${date}-এ ঝড়ের সতর্কতা।`);
+          forecastHTML += `<div class="col-6 col-md-2 forecast-day"><div class="card text-center bg-light h-100 border-0"><div class="card-body p-2"><small class="fw-bold">${date}</small><br><span class="text-primary">${temp}°সে</span><br><small>${desc}</small><br><small class="text-danger">বৃষ্টি: ${rainProb}%</small></div></div></div>`;
+          if (rainProb > 50) alerts.push(`${date}-এ বৃষ্টির সম্ভাবনা`);
         }
-
         forecastHTML += '</div>';
         document.getElementById('weather-forecast').innerHTML = forecastHTML;
 
+        const alertEl = document.getElementById('weather-alert');
         if (alerts.length > 0) {
-          document.getElementById('weather-alert').className = 'alert-box alert-danger';
-          document.getElementById('weather-alert').innerHTML = '<strong>সতর্কতা:</strong> ' + alerts.join(' ');
+          alertEl.className = 'alert-box alert-danger';
+          alertEl.innerHTML = '<strong>সতর্কতা:</strong> ' + alerts.join(' | ');
         } else {
-          document.getElementById('weather-alert').className = 'alert-box';
-          document.getElementById('weather-alert').innerHTML = '<strong>কোনো সতর্কতা নেই।</strong> স্বাভাবিক চাষ চালিয়ে যান।';
+          alertEl.className = 'alert-box';
+          alertEl.innerHTML = '<strong>কোনো সতর্কতা নেই।</strong>';
         }
-        document.getElementById('weather-alert').classList.remove('d-none');
-
+        alertEl.classList.remove('d-none');
       } catch (error) {
-        console.error('Weather Error:', error);
         document.getElementById('weather-today').innerHTML = '২৮°সে | সূর্যালোকিত';
         document.getElementById('weather-details').innerHTML = '<small>আর্দ্রতা: ৭০% | বাতাস: ৬ কিমি/ঘণ্টা</small>';
         document.getElementById('weather-alert').className = 'alert-box alert-danger';
@@ -232,79 +188,16 @@
       }
     }
 
-    // === Gemini AI (ফাইনাল ফিক্স: সব কেস চেক) ===
-    async function getAgriAdvice() {
-      const query = document.getElementById('agri-query').value.trim();
-      if (!query) {
-        document.getElementById('ai-advice').innerHTML = '<em class="text-danger">দয়া করে সমস্যা লিখুন।</em>';
-        return;
-      }
-
-      document.getElementById('ai-advice').innerHTML = '<em class="ai-thinking">Gemini AI চিন্তা করছে...</em>';
-
-      try {
-        const prompt = `বাংলাদেশের গ্রামে কৃষি সমস্যা: ${query}। BRRI-ভিত্তিক, সহজ, ব্যবহারিক সমাধান বাংলায় দাও। ৩-৪ লাইনে। কৃষক যেন সহজে বুঝতে পারে।`;
-        const answer = await generateWithFallback(PREFERRED_MODEL, prompt, { temperature: 0.7, maxOutputTokens: 150 });
-        document.getElementById('ai-advice').innerHTML = `<strong>Gemini AI পরামর্শ:</strong><br>${answer}`;
-      } catch (error) {
-        console.error('Gemini Error:', error);
-        const msg = String(error.message || error).toLowerCase();
-
-        if (msg.includes('proxy_405') || msg.includes('405 not allowed')) {
-          document.getElementById('ai-advice').innerHTML = `
-            <div class="text-danger">
-              <strong>সমস্যা:</strong> প্রক্সি সার্ভারে POST পাঠানো যাচ্ছে না।<br>
-              <strong>সমাধান:</strong> প্রক্সি চালু আছে কি না চেক করুন: <a href="${PROXY_BASE}" target="_blank">${PROXY_BASE}</a>
-            </div>
-          `;
-          return;
-        }
-
-        if (msg.includes('404') || msg.includes('not found') || msg.includes('models/')) {
-          try {
-            const models = await listAvailableModels();
-            const names = (models && models.length) ? models.map(m => m.name).slice(0,8) : [];
-            document.getElementById('ai-advice').innerHTML = `
-              <div class="text-danger">
-                <strong>সমস্যা:</strong> মডেল পাওয়া যায়নি।<br>
-                <strong>উপলব্ধ মডেল:</strong> ${names.length ? names.join(', ') : 'তথ্য নেই'}<br>
-                <strong>হেল্পলাইন:</strong> ১৬৭৬৭
-              </div>
-            `;
-            return;
-          } catch (lmErr) {
-            document.getElementById('ai-advice').innerHTML = `<div class="text-danger">সমস্যা: ${error.message}</div>`;
-            return;
-          }
-        }
-
-        document.getElementById('ai-advice').innerHTML = `
-          <div class="text-danger">
-            <strong>সমস্যা:</strong> ${error.message || 'অজানা'}<br>
-            <strong>হেল্পলাইন:</strong> ১৬৭৬৭
-          </div>
-        `;
-      }
-    }
-
-    // পেজ লোড হলে আবহাওয়া লোড করো
-    window.addEventListener('load', loadWeather);
-
-    // === Gemini Chatbot ===
+    // === চ্যাটবট ===
     const chatMessages = [];
-    const PREFERRED_MODEL = 'models/gemini-2.5-pro';
 
     function renderChat() {
       const win = document.getElementById('chat-window');
       win.innerHTML = '';
       if (chatMessages.length === 0) {
-        const el = document.createElement('div');
-        el.className = 'text-muted small';
-        el.textContent = 'কোনো মেসেজ নেই — শুরু করুন।';
-        win.appendChild(el);
+        win.innerHTML = '<div class="text-muted small">চ্যাট শুরু করুন...</div>';
         return;
       }
-
       chatMessages.forEach(m => {
         const row = document.createElement('div');
         row.className = 'chat-row';
@@ -329,67 +222,45 @@
       renderChat();
       input.value = '';
 
-      chatMessages.push({ role: 'assistant', text: 'Gemini AI চিন্তা করছে...' });
+      chatMessages.push({ role: 'assistant', text: 'চিন্তা করছি...' });
       renderChat();
 
       try {
-        let conv = `তুমি একজন কৃষি পরামর্শদাতা। সহজ ও ব্যবহারিক উপদেশ দাও (বাংলায়)।\n`;
+        let conv = `তুমি একজন বাংলাদেশী কৃষি বিশেষজ্ঞ। সহজ বাংলায় উত্তর দাও।\n`;
         chatMessages.forEach(m => {
-          if (m.role === 'user') conv += `Farmer: ${m.text}\n`;
-          if (m.role === 'assistant') conv += `Assistant: ${m.text}\n`;
+          if (m.role === 'user') conv += `কৃষক: ${m.text}\n`;
+          if (m.role === 'assistant') conv += `বিশেষজ্ঞ: ${m.text}\n`;
         });
 
-        const answer = await generateWithFallback(PREFERRED_MODEL, conv, { temperature: 0.3, maxOutputTokens: 300 });
-        if (chatMessages.length && chatMessages[chatMessages.length - 1].text === 'Gemini AI চিন্তা করছে...') chatMessages.pop();
+        const answer = await generateWithFallback(PREFERRED_MODEL, conv, { temperature: 0.4, maxOutputTokens: 300 });
+        if (chatMessages[chatMessages.length - 1].text === 'চিন্তা করছি...') chatMessages.pop();
         chatMessages.push({ role: 'assistant', text: answer });
         renderChat();
-
       } catch (err) {
-        if (chatMessages.length && chatMessages[chatMessages.length - 1].text === 'Gemini AI চিন্তা করছে...') chatMessages.pop();
-        console.error('Chat Error:', err);
-        const msgText = String(err.message || err).toLowerCase();
-        if (msgText.includes('proxy_405') || msgText.includes('405 not allowed')) {
-          chatMessages.push({ role: 'assistant', text: `প্রক্সি সার্ভারে সমস্যা। চেক করুন: ${PROXY_BASE}` });
-        } else if (msgText.includes('404')) {
-          chatMessages.push({ role: 'assistant', text: 'মডেল পাওয়া যায়নি। হেল্পলাইন: ১৬৭৬৭' });
-        } else {
-          chatMessages.push({ role: 'assistant', text: `সমস্যা: ${err.message || err}` });
-        }
+        if (chatMessages[chatMessages.length - 1].text === 'চিন্তা করছি...') chatMessages.pop();
+        chatMessages.push({ role: 'assistant', text: `সমস্যা: ${err.message || 'ইন্টারনেট চেক করুন'}` });
         renderChat();
       }
     }
 
-    async function listAvailableModels() {
-      const url = `${PROXY_BASE}/api/models`;
-      const res = await fetch(url, { method: 'GET' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    async function generateWithFallback(model, prompt, opts) {
+      const res = await fetch(`${PROXY_BASE}/api/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model, prompt, ...opts })
+      });
+      if (!res.ok) throw new Error('প্রক্সি সার্ভারে সমস্যা');
       const data = await res.json();
-      return data.models || [];
+      return data.outputText || data.candidates?.[0]?.content?.parts?.[0]?.text || JSON.stringify(data);
     }
 
-    async function generateWithFallback(modelName, promptText, opts = {}) {
-      const url = `${PROXY_BASE}/api/generate`;
-      const body = { model: modelName, prompt: promptText, temperature: opts.temperature || 0.3, maxOutputTokens: opts.maxOutputTokens || 300 };
-      const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-
-      if (!res.ok) {
-        const t = await res.text();
-        if (res.status === 405) throw new Error('PROXY_405: 405 Not Allowed - প্রক্সি সার্ভার চালু নেই।');
-        throw new Error(`Proxy failed: HTTP ${res.status}: ${t}`);
-      }
-
-      const data = await res.json();
-      if (data.outputText) return String(data.outputText).trim();
-      if (data.candidates?.[0]?.content?.parts?.[0]?.text) return String(data.candidates[0].content.parts[0].text).trim();
-      if (data.message?.content?.[0]?.text) return String(data.message.content[0].text).trim();
-      return JSON.stringify(data);
-    }
-
+    // === ইভেন্ট ===
+    window.addEventListener('load', loadWeather);
     document.addEventListener('DOMContentLoaded', () => {
       renderChat();
-      document.getElementById('chat-send').addEventListener('click', sendChatMessage);
-      document.getElementById('chat-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
-      document.getElementById('chat-clear').addEventListener('click', () => { chatMessages.length = 0; renderChat(); });
+      document.getElementById('chat-send').onclick = sendChatMessage;
+      document.getElementById('chat-input').onkeypress = e => { if (e.key === 'Enter') sendChatMessage(); };
+      document.getElementById('chat-clear').onclick = () => { chatMessages.length = 0; renderChat(); };
     });
   </script>
 </body>
