@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>স্থানীয় কৃষি ও ব্যবসা - ঘুঘুমারী</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body {
+      background: #f8f9fa;
+      font-family: 'SolaimanLipi', Arial, sans-serif;
+    }
+    .navbar-brand {
+      font-weight: bold;
+    }
+    .hero-section {
+      background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+      color: white;
+      padding: 4rem 0;
+      margin-top: 56px;
+    }
+    .service-card {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border: 1px solid #dee2e6;
+      transition: transform 0.3s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-5px);
+    }
+    .contact-badge {
+      background: #198754;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      text-decoration: none;
+      display: inline-block;
+      margin: 0.2rem;
+      font-size: 0.9rem;
+    }
+    .contact-badge:hover {
+      background: #146c43;
+      color: white;
+    }
+    .category-badge {
+      background: #e9ecef;
+      color: #495057;
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      margin-right: 0.5rem;
+    }
+    .filter-btn {
+      border: 2px solid #198754;
+      color: #198754;
+      background: white;
+      margin: 0.2rem;
+    }
+    .filter-btn.active {
+      background: #198754;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- নেভবার -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top shadow">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">ঘুঘুমারী</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">হোম</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">পরিচয়</a></li>
+          <li class="nav-item"><a class="nav-link" href="education.html">শিক্ষা</a></li>
+          <li class="nav-item"><a class="nav-link" href="development.html">উন্নয়ন</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#beauty">ঘুঘুমারীর সৌন্দর্য</a></li>
+          <li class="nav-item"><a class="nav-link" href="welfare.html">কল্যাণ</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">যোগাযোগ</a></li>
+          <li class="nav-item"><a class="nav-link" href="emergency.html">জরুরি প্রয়োজন</a></li>
+          <li class="nav-item"><a class="nav-link" href="agriculture.html">কৃষি</a></li>
+          <li class="nav-item"><a class="nav-link active" href="local-business.html">স্থানীয় ব্যবসা</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- হিরো সেকশন -->
+  <section class="hero-section">
+    <div class="container text-center">
+      <h1 class="display-5 fw-bold">স্থানীয় কৃষি ও ব্যবসা সেবা</h1>
+      <p class="lead mb-0">আপনার প্রয়োজনীয় সেবা খুঁজে নিন - এক ক্লিকেই যোগাযোগ করুন</p>
+    </div>
+  </section>
+
+  <!-- ফিল্টার সেকশন -->
+  <section class="py-4 bg-white">
+    <div class="container">
+      <div class="text-center mb-4">
+        <h4 class="text-success mb-3">সেবা খুঁজুন</h4>
+        <div class="d-flex flex-wrap justify-content-center">
+          <button class="btn filter-btn active" onclick="filterServices('all')">সব সেবা</button>
+          <button class="btn filter-btn" onclick="filterServices('agriculture')">কৃষি সেবা</button>
+          <button class="btn filter-btn" onclick="filterServices('repair')">মেরামত সেবা</button>
+          <button class="btn filter-btn" onclick="filterServices('transport')">পরিবহন</button>
+          <button class="btn filter-btn" onclick="filterServices('daily')">দৈনন্দিন</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- সেবা তালিকা -->
+  <section class="py-5">
+    <div class="container">
+      
+      <!-- কৃষি সেবা -->
+      <div class="service-category agriculture">
+        <h3 class="text-success mb-4"><i class="fas fa-tractor me-2"></i>কৃষি সেবা</h3>
+        <div class="row">
+          
+          <!-- ধান মাড়াইকারী -->
+          <div class="col-lg-6">
+            <div class="service-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">ধান মাড়াইকারী</h5>
+                <span class="category-badge">কৃষি</span>
+              </div>
+              <div class="mb-3">
+                <strong>রফিকুল ইসলাম</strong><br>
+                <small class="text-muted">অনুভবপুর, ঘুঘুমারী</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801712345678" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 01712-345678
+                </a>
+                <a href="https://wa.me/8801712345678" class="contact-badge">
+                  <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- ট্রাক্টর সার্ভিস -->
+          <div class="col-lg-6">
+            <div class="service-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">ট্রাক্টর সার্ভিস</h5>
+                <span class="category-badge">কৃষি</span>
+              </div>
+              <div class="mb-3">
+                <strong>করিম উদ্দিন</strong><br>
+                <small class="text-muted">শিমুলবাড়ী</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801812345678" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 01812-345678
+                </a>
+                <a href="https://wa.me/8801812345678" class="contact-badge">
+                  <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- সেচ ব্যবস্থাপনা -->
+          <div class="col-lg-6">
+            <div class="service-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">সেচ ব্যবস্থাপনা</h5>
+                <span class="category-badge">কৃষি</span>
+              </div>
+              <div class="mb-3">
+                <strong>জাহাঙ্গীর আলম</strong><br>
+                <small class="text-muted">ঘুঘুমারী বাজার</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801912345678" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 01912-345678
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- মেরামত সেবা -->
+      <div class="service-category repair">
+        <h3 class="text-success mb-4 mt-5"><i class="fas fa-tools me-2"></i>মেরামত সেবা</h3>
+        <div class="row">
+          
+          <!-- ইলেকট্রিশিয়ান -->
+          <div class="col-lg-6">
+            <div class="service-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">ইলেকট্রিশিয়ান</h5>
+                <span class="category-badge">মেরামত</span>
+              </div>
+              <div class="mb-3">
+                <strong>সোহেল রানা</strong><br>
+                <small class="text-muted">ঘুঘুমারী বাজার</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801712345679" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 01712-345679
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- প্লাম্বার -->
+          <div class="col-lg-6">
+            <div class="service-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">প্লাম্বার</h5>
+                <span class="category-badge">মেরামত</span>
+              </div>
+              <div class="mb-3">
+                <strong>মঞ্জুরুল হক</strong><br>
+                <small class="text-muted">অনুভবপুর</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801812345679" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 01812-345679
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- রাজমিস্ত্রি -->
+          <div class="col-lg-6">
+            <div class="service-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">রাজমিস্ত্রি</h5>
+                <span class="category-badge">মেরামত</span>
+              </div>
+              <div class="mb-3">
+                <strong>আব্দুল হালিম</strong><br>
+                <small class="text-muted">শিমুলবাড়ী</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801912345679" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 01912-345679
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- পরিবহন সেবা -->
+      <div class="service-category transport">
+        <h3 class="text-success mb-4 mt-5"><i class="fas fa-truck me-2"></i>পরিবহন সেবা</h3>
+        <div class="row">
+          
+          <!-- ট্রাক ভাড়া -->
+          <div class="col-lg-6">
+            <div class="service-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">ট্রাক ভাড়া</h5>
+                <span class="category-badge">পরিবহন</span>
+              </div>
+              <div class="mb-3">
+                <strong>সালাউদ্দিন আহমেদ</strong><br>
+                <small class="text-muted">ঘুঘুমারী</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801712345680" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 01712-345680
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- দৈনন্দিন সেবা -->
+      <div class="service-category daily">
+        <h3 class="text-success mb-4 mt-5"><i class="fas fa-store me-2"></i>দৈনন্দিন সেবা</h3>
+        <div class="row">
+          
+          <!-- মুদি দোকান -->
+          <div class="col-lg-6">
+            <div class="service-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">মুদি দোকান</h5>
+                <span class="category-badge">দৈনন্দিন</span>
+              </div>
+              <div class="mb-3">
+                <strong>রহিম মিয়া</strong><br>
+                <small class="text-muted">ঘুঘুমারী বাজার</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801812345680" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 01812-345680
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- মেডিকেল স্টোর -->
+          <div class="col-lg-6">
+            <div class="service-card">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="text-success mb-0">মেডিকেল স্টোর</h5>
+                <span class="category-badge">দৈনন্দিন</span>
+              </div>
+              <div class="mb-3">
+                <strong>ফার্মাসি প্লাস</strong><br>
+                <small class="text-muted">শিমুলবাড়ী</small>
+              </div>
+              <div class="contact-info">
+                <a href="tel:+8801912345680" class="contact-badge">
+                  <i class="fas fa-phone me-1"></i> 01912-345680
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- রেজিস্ট্রেশন সেকশন -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="card border-0 shadow">
+            <div class="card-body p-5">
+              <h3 class="text-center text-success mb-4">নতুন সেবা যোগ করুন</h3>
+              <p class="text-center text-muted mb-4">আপনার সেবা তালিকাভুক্ত করতে নিচের ফর্মটি পূরণ করুন</p>
+              
+              <form id="serviceForm">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">আপনার নাম</label>
+                    <input type="text" class="form-control" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">মোবাইল নম্বর</label>
+                    <input type="tel" class="form-control" required>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">সেবার ধরন</label>
+                    <select class="form-select" required>
+                      <option value="">সেবা নির্বাচন করুন</option>
+                      <option value="agriculture">কৃষি সেবা</option>
+                      <option value="repair">মেরামত সেবা</option>
+                      <option value="transport">পরিবহন সেবা</option>
+                      <option value="daily">দৈনন্দিন সেবা</option>
+                    </select>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">সেবার বিবরণ</label>
+                    <input type="text" class="form-control" placeholder="যেমন: ধান মাড়াইকারী, ইলেকট্রিশিয়ান ইত্যাদি" required>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">ঠিকানা</label>
+                    <textarea class="form-control" rows="2"></textarea>
+                  </div>
+                  <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-success btn-lg">
+                      <i class="fas fa-paper-plane me-2"></i>জমা দিন
+                    </button>
+                  </div>
+                </div>
+              </form>
+              
+              <div class="text-center mt-4">
+                <small class="text-muted">
+                  অথবা WhatsApp এ তথ্য পাঠান: 
+                  <a href="https://wa.me/8801521703362" class="text-success">+8801521703362</a>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ফুটার -->
+  <footer class="bg-dark text-white text-center py-4">
+    <div class="container">
+      <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী</p>
+      <p class="mb-0 small">শিমুলবাড়ী, জলঢাকা, নীলফামারী । ডেভেলপ করেছেন: <strong>Abu Sayed Islam</strong><br>
+      Computer Science and Engineering, JnU</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Filter functionality
+    function filterServices(category) {
+      // Update active button
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Show/hide categories
+      const categories = document.querySelectorAll('.service-category');
+      categories.forEach(cat => {
+        if (category === 'all' || cat.classList.contains(category)) {
+          cat.style.display = 'block';
+        } else {
+          cat.style.display = 'none';
+        }
+      });
+    }
+
+    // Form submission
+    document.getElementById('serviceForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('ধন্যবাদ! আপনার তথ্য জমা দেওয়া হয়েছে। আমরা শীঘ্রই যোগাযোগ করব।');
+      this.reset();
+    });
+
+    // Initialize
+    window.addEventListener('load', function() {
+      filterServices('all');
+    });
+  </script>
+</body>
+</html>
