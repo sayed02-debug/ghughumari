@@ -6,7 +6,6 @@ require('dotenv').config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-// Serve static files from project root so the HTML can be loaded from the same origin as the proxy
 app.use(express.static(__dirname));
 
 const PORT = process.env.PORT || 3000;
@@ -26,46 +25,38 @@ app.get('/api/models', async (req, res) => {
   } catch (err) {
     const status = err.response ? err.response.status : 500;
     const body = err.response ? err.response.data : { message: err.message };
+    console.error('Models Error:', err.response?.data || err.message); // Logging
     res.status(status).json({ error: body });
   }
 });
 
-// POST /api/generate -> proxy generateMessage (chat) first, fallback to generateContent
+// POST /api/generate -> fallback models + better error
 app.post('/api/generate', async (req, res) => {
-  const { model = 'models/gemini-2.5-pro', prompt = '', temperature = 0.3, maxOutputTokens = 300 } = req.body || {};
-  try {
-    // Try generateMessage (chat-style)
-    const url = `${BASE}/${model}:generateMessage?key=${GEMINI_KEY}`;
-    const body = {
-      messages: [
-        { author: 'user', content: [{ type: 'text', text: prompt }] }
-      ],
-      temperature,
-      maxOutputTokens
-    };
-    const r = await axios.post(url, body, { timeout: 20000 });
-    return res.json(r.data);
-  } catch (err) {
-    // If generateMessage failed for compatibility, try generateContent
-    const is404 = err.response && err.response.status === 404;
-    const errText = err.response && err.response.data ? JSON.stringify(err.response.data) : err.message;
-    if (!is404 && !(String(errText).toLowerCase().includes('generatecontent') || String(errText).toLowerCase().includes('not supported'))) {
-      return res.status(err.response ? err.response.status : 500).json({ error: errText });
-    }
-
+  let { model = 'models/gemini-1.5-flash-latest', prompt = '', temperature = 0.3, maxOutputTokens = 300 } = req.body || {}; // Default to stable model
+  
+  // Fallback if model invalid
+  const fallbackModels = ['models/gemini-1.5-flash-latest', 'models/gemini-1.5-pro-latest', 'models/gemini-pro'];
+  
+  for (let currentModel of [model, ...fallbackModels]) {
     try {
-      const url2 = `${BASE}/${model}:generateContent?key=${GEMINI_KEY}`;
-      const body2 = {
+      console.log(`Trying model: ${currentModel}`); // Logging
+      // Try generateContent first (stable)
+      const url = `${BASE}/${currentModel}:generateContent?key=${GEMINI_KEY}`;
+      const body = {
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: { temperature, maxOutputTokens }
       };
-      const r2 = await axios.post(url2, body2, { timeout: 20000 });
-      return res.json(r2.data);
-    } catch (err2) {
-      const bodyErr = err2.response && err2.response.data ? err2.response.data : { message: err2.message };
-      return res.status(err2.response ? err2.response.status : 500).json({ error: bodyErr });
+      const r = await axios.post(url, body, { timeout: 30000 }); // 30s timeout
+      console.log('Success with model:', currentModel);
+      return res.json(r.data);
+    } catch (err) {
+      console.error(`Failed model ${currentModel}:`, err.response?.status, err.response?.data?.error?.message || err.message);
+      if (err.response?.status !== 404) break; // If not model error, stop fallback
     }
   }
+  
+  // Final error
+  res.status(404).json({ error: { message: 'Model not found or access denied. Available models: check /api/models. Key issue?' } });
 });
 
 app.listen(PORT, () => {

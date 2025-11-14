@@ -60,9 +60,12 @@
     <div class="card shadow-sm chat-card">
       <div class="card-body">
         <h4 class="mb-3 text-success">
-          <i class="fas fa-robot"></i> Gemini AI — আপনার কৃষি সহকারী
+          Gemini AI — আপনার কৃষি সহকারী
         </h4>
-        <p class="text-muted small mb-3">ধানে পোকা, পাতা হলুদ, সারের পরিমাণ — যা জানতে চান, লিখুন। <strong>টিপ: বাংলায় লিখুন, ভালো উত্তর পাবেন!</strong></p>
+        <p class="text-muted small mb-3">
+          ধানে পোকা, পাতা হলুদ, সারের পরিমাণ — যা জানতে চান, লিখুন। 
+          <strong>টিপ: বাংলায় লিখুন, ভালো উত্তর পাবেন!</strong>
+        </p>
         <div id="chat-window" class="chat-window d-flex flex-column mb-3" aria-live="polite">
           <div class="text-muted small">চ্যাট শুরু করতে নিচে লিখুন...</div>
         </div>
@@ -141,7 +144,7 @@
     // === API Keys ===
     const WEATHER_API_KEY = '6561455c200e43306bb6913524c5eeb1';
     const PROXY_BASE = 'https://ghughumari.onrender.com'; // লাইভ সার্ভার
-    const PREFERRED_MODEL = 'models/gemini-2.5-flash'; // ← চেঞ্জ: ফাস্ট + অ্যাক্সেসিবল মডেল
+    const PREFERRED_MODEL = 'models/gemini-1.5-flash-latest'; // স্টেবল, সবার জন্য অ্যাক্সেসিবল
 
     // === আবহাওয়া ===
     async function loadWeather() {
@@ -246,7 +249,7 @@
           if (retryCount < maxRetries) {
             chatMessages[chatMessages.length - 1].text = `চেষ্টা ${retryCount}/${maxRetries}: ${err.message || 'পুনরায় চেষ্টা করছি...'}`;
             renderChat();
-            await new Promise(resolve => setTimeout(resolve, 5000)); // 5s wait
+            await new Promise(resolve => setTimeout(resolve, 5000));
           } else {
             if (chatMessages[chatMessages.length - 1].text.includes('জাগছে')) chatMessages.pop();
             chatMessages.push({ role: 'assistant', text: `সমস্যা: ${err.message || 'ইন্টারনেট/সার্ভার চেক করুন'}। হেল্পলাইন: ১৬৭৬৭` });
@@ -258,7 +261,7 @@
 
     async function generateWithFallback(model, prompt, opts) {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s timeout (বাড়ানো)
+      const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s
 
       const res = await fetch(`${PROXY_BASE}/api/generate`, {
         method: 'POST',
