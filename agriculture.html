@@ -62,7 +62,7 @@
         <h4 class="mb-3 text-success">
           <i class="fas fa-robot"></i> Gemini AI — আপনার কৃষি সহকারী
         </h4>
-        <p class="text-muted small mb-3">ধানে পোকা, পাতা হলুদ, সারের পরিমাণ — যা জানতে চান, লিখুন।</p>
+        <p class="text-muted small mb-3">ধানে পোকা, পাতা হলুদ, সারের পরিমাণ — যা জানতে চান, লিখুন। <strong>টিপ: বাংলায় লিখুন, ভালো উত্তর পাবেন!</strong></p>
         <div id="chat-window" class="chat-window d-flex flex-column mb-3" aria-live="polite">
           <div class="text-muted small">চ্যাট শুরু করতে নিচে লিখুন...</div>
         </div>
@@ -141,7 +141,7 @@
     // === API Keys ===
     const WEATHER_API_KEY = '6561455c200e43306bb6913524c5eeb1';
     const PROXY_BASE = 'https://ghughumari.onrender.com'; // লাইভ সার্ভার
-    const PREFERRED_MODEL = 'models/gemini-2.5-pro';
+    const PREFERRED_MODEL = 'models/gemini-2.5-flash'; // ← চেঞ্জ: ফাস্ট + অ্যাক্সেসিবল মডেল
 
     // === আবহাওয়া ===
     async function loadWeather() {
@@ -258,7 +258,7 @@
 
     async function generateWithFallback(model, prompt, opts) {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+      const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s timeout (বাড়ানো)
 
       const res = await fetch(`${PROXY_BASE}/api/generate`, {
         method: 'POST',
@@ -269,7 +269,10 @@
 
       clearTimeout(timeoutId);
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}: প্রক্সি সার্ভারে সমস্যা (সার্ভার জাগান: ${PROXY_BASE}/api/models)`);
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`HTTP ${res.status}: ${errorText.substring(0, 100)}... (সার্ভার জাগান: ${PROXY_BASE}/api/models)`);
+      }
       const data = await res.json();
       return data.outputText || data.candidates?.[0]?.content?.parts?.[0]?.text || JSON.stringify(data);
     }
