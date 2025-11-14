@@ -151,29 +151,83 @@
       border-radius: 8px;
       margin: 0.5rem 0;
     }
+    .back-btn {
+      position: fixed;
+      top: 80px;
+      left: 20px;
+      z-index: 1000;
+    }
+    .nav-links {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 1000;
+    }
   </style>
 </head>
 <body>
 
+  <!-- Back Button -->
+  <div class="back-btn">
+    <a href="index.html" class="btn btn-outline-success">
+      <i class="fas fa-arrow-left me-2"></i>হোম পেজ
+    </a>
+  </div>
+
+  <!-- Quick Navigation -->
+  <div class="nav-links">
+    <div class="btn-group">
+      <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
+        <i class="fas fa-link me-2"></i>দ্রুত নেভিগেশন
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="index.html"><i class="fas fa-home me-2"></i>হোম পেজ</a></li>
+        <li><a class="dropdown-item" href="about.html"><i class="fas fa-info-circle me-2"></i>পরিচয়</a></li>
+        <li><a class="dropdown-item" href="education.html"><i class="fas fa-graduation-cap me-2"></i>শিক্ষা</a></li>
+        <li><a class="dropdown-item" href="development.html"><i class="fas fa-chart-line me-2"></i>উন্নয়ন</a></li>
+        <li><a class="dropdown-item" href="welfare.html"><i class="fas fa-hands-helping me-2"></i>কল্যাণ</a></li>
+        <li><a class="dropdown-item" href="emergency.html"><i class="fas fa-phone-alt me-2"></i>জরুরি</a></li>
+        <li><a class="dropdown-item" href="contact.html"><i class="fas fa-envelope me-2"></i>যোগাযোগ</a></li>
+      </ul>
+    </div>
+  </div>
+
   <!-- API Status -->
   <div class="api-status warning-status" id="apiStatus">
-    <i class="fas fa-sync-alt me-1"></i>Hybrid Mode Active
+    <i class="fas fa-sync-alt me-1"></i>হাইব্রিড মোড এক্টিভ
   </div>
 
   <!-- নেভবার -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="#">
+      <a class="navbar-brand fw-bold" href="index.html">
         <i class="fas fa-seedling me-2"></i>ঘুঘুমারী কৃষি AI
       </a>
       <span class="navbar-text">
         <i class="fas fa-robot me-1"></i>হাইব্রিড AI মোড
       </span>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i>হোম</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html"><i class="fas fa-info-circle me-1"></i>পরিচয়</a></li>
+          <li class="nav-item"><a class="nav-link" href="education.html"><i class="fas fa-graduation-cap me-1"></i>শিক্ষা</a></li>
+          <li class="nav-item"><a class="nav-link" href="development.html"><i class="fas fa-chart-line me-1"></i>উন্নয়ন</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#beauty"><i class="fas fa-camera me-1"></i>সৌন্দর্য</a></li>
+          <li class="nav-item"><a class="nav-link" href="welfare.html"><i class="fas fa-hands-helping me-1"></i>কল্যাণ</a></li>
+          <li class="nav-item"><a class="nav-link active" href="agriculture.html"><i class="fas fa-tractor me-1"></i>কৃষি AI</a></li>
+          <li class="nav-item"><a class="nav-link" href="emergency.html"><i class="fas fa-phone-alt me-1"></i>জরুরি</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fas fa-envelope me-1"></i>যোগাযোগ</a></li>
+        </ul>
+      </div>
     </div>
   </nav>
 
   <!-- হিরো সেকশন -->
-  <section class="py-4 bg-success text-white">
+  <section class="py-4 bg-success text-white mt-5">
     <div class="container text-center">
       <h1 class="display-6 fw-bold">কৃষি AI সহকারী</h1>
       <p class="lead mb-0">বাংলা, ইংরেজি, বাংলিশ - সব ভাষায় সমাধান</p>
@@ -279,6 +333,17 @@
     <div class="container">
       <p class="mb-1 fw-bold">© ২০২৫ ঘুঘুমারী কৃষি AI | হাইব্রিড AI সলিউশন</p>
       <p class="mb-0 small">জলঢাকা, নীলফামারী • ডেভেলপ করেছেন: আবু সায়েদ ইসলাম</p>
+      <div class="mt-3">
+        <a href="index.html" class="btn btn-outline-light btn-sm me-2">
+          <i class="fas fa-home me-1"></i>হোম পেজ
+        </a>
+        <a href="contact.html" class="btn btn-outline-light btn-sm me-2">
+          <i class="fas fa-envelope me-1"></i>যোগাযোগ
+        </a>
+        <a href="emergency.html" class="btn btn-outline-light btn-sm">
+          <i class="fas fa-phone-alt me-1"></i>জরুরি হেল্পলাইন
+        </a>
+      </div>
     </div>
   </footer>
 
@@ -413,25 +478,6 @@
             </div>
           `
         }
-      },
-      
-      // সাধারণ কৃষি পরামর্শ
-      'সার': {
-        'default': {
-          problem: 'সার প্রয়োগ',
-          solution: `
-            <div class="solution-card">
-              <h6><i class="fas fa-seedling me-2"></i>সার প্রয়োগের সাধারণ নিয়ম:</h6>
-              <ul>
-                <li><strong>ইউরিয়া:</strong> চারা রোপণের ১৫-২০ দিন পর এবং ৪০-৪৫ দিন পর</li>
-                <li><strong>টিএসপি:</strong> জমি তৈরি করার সময় শেষ চাষে</li>
-                <li><strong>এমওপি:</strong> জমি তৈরি করার সময় এবং কাইচথোড় আসার সময়</li>
-                <li><strong>জিপসাম:</strong> জমি তৈরির সময় প্রয়োগ করুন</li>
-                <li>মাটি পরীক্ষা করে সঠিক মাত্রা নির্ধারণ করুন</li>
-              </ul>
-            </div>
-          `
-        }
       }
     };
 
@@ -486,7 +532,7 @@
         removeTypingIndicator();
         const kbResponse = getKnowledgeBaseResponse(message);
         addMessage(kbResponse, 'bot');
-        updateApiStatus('<i class="fas fa-database me-1"></i>Local Knowledge Base', 'warning');
+        updateApiStatus('<i class="fas fa-database me-1"></i>স্থানীয় জ্ঞানভান্ডার', 'warning');
       }
       
       sendButton.disabled = false;
